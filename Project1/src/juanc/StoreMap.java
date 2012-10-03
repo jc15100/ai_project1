@@ -8,9 +8,20 @@ public class StoreMap {
     }
     
     private NodeType [][] store;
+    private int rows;
+    private int cols;
+    
     
     public StoreMap(NodeType[][] s){
         store = s;
+    }
+    
+    public int getRows(){
+        return rows;
+    }
+    
+    public int getCols(){
+        return cols;
     }
     
 }
