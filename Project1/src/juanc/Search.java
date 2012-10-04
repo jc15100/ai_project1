@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Set;
 import java.util.TreeSet;
@@ -16,6 +16,13 @@ import java.util.TreeSet;
 public class Search {
     public static final int DEFAULT_COST = 1;
     private int graphSize;
+            
+    
+    public enum NodeType{
+        WALL, FREE, GOAL
+    }
+    
+    private NodeType [][] store;
     
     /*perform search initialization given a store map with goal shown, 
      * and initial location in the store given by x0, y0 */ 
@@ -33,100 +40,132 @@ public class Search {
             int x_dim = Integer.parseInt(br.readLine());
             int y_dim = Integer.parseInt(br.readLine());
             
-            StoreMap.NodeType[][] store = new StoreMap.NodeType[y_dim][x_dim];
+            store = new NodeType[y_dim][x_dim];
             
             for(int y = 0; y < y_dim; y++){
                 String line = br.readLine();
                 for(int x = 0; x < line.length(); x++){
                     switch(line.charAt(x)){
                         case ' ':
-                            store[y][x] = StoreMap.NodeType.FREE;
+                            store[y][x] = NodeType.FREE;
                             break;
                         case '#':
-                            store[y][x] = StoreMap.NodeType.WALL;
+                            store[y][x] = NodeType.WALL;
                             break;
                         case 'C':
-                            store[y][x] = StoreMap.NodeType.GOAL;
+                            store[y][x] = NodeType.GOAL;
                             break;
                     }
                 }
             }
-            //instantiate StoreMap with built array
-            StoreMap storeMap = new StoreMap(store);
-            
         }
         catch (Throwable e) {
-            System.out.println("Error reading file");
+            System.out.println("Error reading file: " + e.getMessage());
             System.exit(1);
         }
-        
+         
     }
     
     /*list to be built*/
-    private ArrayList<Step> shortestPath;
-    
+    private ArrayList<State> shortestPath;
+    private HashMap<State,State> path = new HashMap<State,State>();
+            
     //TO DO
     public void buildBestPath(){
         
     }
     
+    public State removeLeastCost(ArrayList<State> f){
+        int min = f.get(0).getCost();
+        int min_loc = 0;
+        for(int i = 0; i < f.size(); i++){
+            if(f.get(i).getCost() < min){
+                min = f.get(i).getCost();
+                min_loc = i;
+            }
+        }
+        return f.remove(min_loc);
+    }
     
-    public void A_star(int x0, int y0, int x1, int y1){
-        PriorityQueue<Step> steps = new PriorityQueue<Step>();
-        TreeSet<Step> explored = new TreeSet<Step>();
+    public State A_star(int x0, int y0, int x1, int y1){
+        ArrayList<State> frontier = new ArrayList<State>();
+        TreeSet<State> explored = new TreeSet<State>();
         
-        Step start = new Step(DEFAULT_COST, x0, y0);
+        State start = new State(DEFAULT_COST, y0, x0);
         
-        steps.add(start);
-        while(!steps.isEmpty() && explored.size() < graphSize){
-            Step c = steps.remove();
-            
+        frontier.add(start);
+        
+        while(!frontier.isEmpty()){
+            State c = this.removeLeastCost(frontier);
+
             //test for goal
             if (c.getLocation().getX() == x1 && c.getLocation().getY() == y1){
                 System.out.println("Goal found!");
-                return;
+                return c;
             }
             //add to explored set
             explored.add(c);
             
-            Set<Step> neighbors = c.getNeighbors();
+            Set<State> neighbors = c.getNeighbors();
             
             //check all steps around current
-            for(Step e: neighbors){
-                //set cost of neighbor as cost to get there
-                int co = e.getCost() + c.getCost();
-                c.setCost(co);
-                
-                //add to priority queue
-                if(!explored.contains(e) && !steps.contains(e) ){
-                    steps.add(e);
-                }
-                else if(steps.contains(e)){
+            for(State e: neighbors){
+                if(!store[(int)e.getLocation().getY()][(int)e.getLocation().getX()].equals(NodeType.WALL)){
                     
-                    int c_function = co + h_function(c.getLocation(),e.getLocation());
-                    if(e.getCost() > c_function){
-                        //replace cost
-                        e.setCost(c_function);
-                        //add to steps 
-                        steps.add(e);
+                    //System.out.println("Type:" + store[(int)e.getLocation().getY()][(int)e.getLocation().getX()]);
+                    
+                    //set cost of neighbor as cost to get there
+                    int co = e.getCost() + c.getCost() + h_function(e.getLocation(), new Point(x1,y1));
+                    c.setCost(co);
+
+                    //add to priority queue
+                    if(!explored.contains(e) || !frontier.contains(e) ){
+                        frontier.add(e);
+                        path.put(e, c);
                     }
+                    else{
+                    if(frontier.contains(e)){
+                       State duplicate = frontier.get(frontier.indexOf(e));
+                       if(duplicate.getCost() > e.getCost()){
+                            //replace cost
+                            frontier.remove(frontier.indexOf(duplicate));
+                            frontier.add(e);
+                            path.put(e, c);
+                        }
+
+                    }
+                }
                 }
             }
         }
+        return null;
     }
     
     private int h_function(Point p1, Point p2){
         return (int)Math.sqrt((p2.x - p1.x)^2 + (p2.y - p1.y)^2);
     }
     
-    public static void main(String [] args){
+    public void printSolution(){
+        State init = new State(1,1,1);
+        State goal = this.A_star(1, 1, 5, 1);
+        System.out.println("Path size: "+ path.size());
         
-         if (args.length != 1) {
+        while(!goal.equals(init)){
+            goal = path.get(goal);
+            System.out.println("Steps:" + goal.getLocation() + " Cost" + goal.getCost());
+        }
+    }
+    
+    
+    public static void main(String[] args){
+        
+        if (args.length != 1) {
             System.out.println("Error: missing map filename or more arguments than expected!");
             System.exit(1);
         }
-        
+
         File map = new File(args[0]); 
         Search test = new Search(map); 
+        test.printSolution();
     }
 }
