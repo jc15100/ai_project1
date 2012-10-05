@@ -54,7 +54,6 @@ public class State implements Comparable<State>{
         return true;
     }
     
-    @Override
     public String toString(){
         return "X: "+ (int)loc.getX() + " Y: " + (int)loc.getY() + " Cost: " + cost;
     }

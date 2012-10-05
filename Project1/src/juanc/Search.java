@@ -17,6 +17,7 @@ public class Search {
     public static final int EUCLIDEAN = 0;
     public static final int MANHATTAN = 1;
     public static final double D = 1.0;
+    public static final double P = 1/50;
     
     public enum NodeType{ WALL, FREE, GOAL, STEP}
     
@@ -87,6 +88,7 @@ public class Search {
             //add to explored set
             explored.add(current);
             store[(int)current.getLocation().getY()][(int)current.getLocation().getX()] = NodeType.GOAL;
+            
             //get a set of neighbors around
             Set<State> neighbors = current.getNeighbors();
             
@@ -99,7 +101,7 @@ public class Search {
                     e.setCost(co);
 
                     //add to priority queue
-                    if(!explored.contains(e)){
+                    if(!explored.contains(e) && !frontier.contains(e)){
                         frontier.add(e);
                         path.put(e, current);
                     }
@@ -139,7 +141,7 @@ public class Search {
         
         /*track time elapsed to find solution*/
         long start = System.currentTimeMillis();
-        State goal = this.A_star(1, 1, 1, 10);
+        State goal = this.A_star(1, 1, 7, 7);
         System.out.println("Elapsed A* Search Time: " + (System.currentTimeMillis() - start));
         
         int path_length = 0;
@@ -163,14 +165,17 @@ public class Search {
         return (s.getCost() + h_function(s.getLocation(),goal.getLocation(), MANHATTAN));
     }
     
-    /*calculate heuristic for 2 points; TO DO: include choices*/
+    /*calculate heuristic for 2 points; scales heuristic to break ties*/
     private double h_function(Point p1, Point p2, int type){
         if(type == EUCLIDEAN){
-            return Math.sqrt((int)(p2.getX() - p1.getX())^2 + (int)(p2.getY() - p1.getY())^2);
+            return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(),2));
         }
         else {//return MANHATTAN distance
-            return D * (Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY()));
+            double h =  Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY());
+            return (h *= (1.0 + P));
+            
         }
+       
     }
     
     /*draw the path found on the ASCII map*/
@@ -189,7 +194,7 @@ public class Search {
                         map = "x";
                         break;
                     case GOAL:
-                        map = "e";
+                        map = ".";
                         break;
                 }
                 System.out.print(map);

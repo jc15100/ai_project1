@@ -1,8 +1,12 @@
+package juanc;
+
 /*
 NAME: Juan C. Garcia 
 CERTIFICATION: I certify that this work is my own and that
                none of it is the work of any other person.
 */
+import juanc.Edge;
+import juanc.DisjointSet;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,25 +16,25 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
-public class MinCitiesTree 
+public class MinItemsTree 
 {
     private List<Edge> edges;
-    private LinkedList<String> cities;
+    private LinkedList<String> items;
     
     /*Main "Tester" method*/    
     public static void main(String [] args)
     {
-        MinCitiesTree test = new MinCitiesTree("miles.dat");
+        MinItemsTree test = new MinItemsTree("miles.dat");
         test.printMinTree(test.minSpanTree());
     }
     
-    public MinCitiesTree(String fname){
+    public MinItemsTree(String fname){
         edges = new ArrayList<Edge>();
-        cities = new LinkedList<String>();
+        items = new LinkedList<String>();
         
-        cities.addFirst("milk");
-        cities.addFirst("bread");
-        cities.addFirst("juice");
+        items.addFirst("milk");
+        items.addFirst("bread");
+        items.addFirst("juice");
         
         edges.add(new Edge("bread","milk", 3));
         edges.add(new Edge("juice","milk", 5));
@@ -93,7 +97,7 @@ public class MinCitiesTree
     /*Obtains the Minimum Spanning Tree via Kruskal's algorithm*/
     public List<Edge> minSpanTree()
     {
-        int v = cities.size();
+        int v = items.size();
         List<Edge> result = new ArrayList<Edge>();
         PriorityQueue<Edge> pq = new PriorityQueue<Edge>(edges);
         DisjointSet ds = new DisjointSet(v);
@@ -103,8 +107,8 @@ public class MinCitiesTree
             /*The minimum edge is constantly removed*/
             Edge e = pq.remove();
             
-            int r1 = ds.find(cities.indexOf(e.from()));
-            int r2 = ds.find(cities.indexOf(e.to()));
+            int r1 = ds.find(items.indexOf(e.from()));
+            int r2 = ds.find(items.indexOf(e.to()));
             /*If the two find calls don't yield same value, then a cycle is 
              * not made and the edge can be added*/
             if(r1 != r2)
