@@ -1,18 +1,22 @@
 package juanc;
 
-import java.util.Set;
 /**
  * @author jc15100
  */
 public class GraphState implements Comparable<GraphState>{
    
     private int cost;
-    private Set<String> visited;
+    private String item;
+    
+    public GraphState( int c, String s){
+        cost = c;
+        item = s;
+    }
 
     @Override
     public int hashCode() {
-        int hash = 7;
-        hash = 23 * hash + (this.visited != null ? this.visited.hashCode() : 0);
+        int hash = 3;
+        hash = 37 * hash + (this.item != null ? this.item.hashCode() : 0);
         return hash;
     }
 
@@ -25,15 +29,10 @@ public class GraphState implements Comparable<GraphState>{
             return false;
         }
         final GraphState other = (GraphState) obj;
-        if (this.visited != other.visited && (this.visited == null || !this.visited.equals(other.visited))) {
+        if ((this.item == null) ? (other.item != null) : !this.item.equals(other.item)) {
             return false;
         }
         return true;
-    }
-    
-    public GraphState( int c, Set<String> v){
-        cost = c;
-        visited = v;
     }
 
     public int getCost() {
@@ -46,14 +45,13 @@ public class GraphState implements Comparable<GraphState>{
     
     @Override
     public String toString(){
-        String v = "";
-        for(String s: visited){
-            v += " " + s;
-        }
-        return v + " Cost: " + cost;
+        return item + " Cost: " + cost;
     }
 
-
+     public String getItem(){
+        return item;
+    }
+     
     @Override
     public int compareTo(GraphState t) {
         throw new UnsupportedOperationException("Not supported yet.");
