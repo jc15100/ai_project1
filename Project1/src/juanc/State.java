@@ -10,12 +10,11 @@ import java.util.Set;
 public class State implements Comparable<State>{
     private int cost;
     private Point loc;
-    private Set<State> neighbors;
+    
     
     public State(int c, int ro, int co){
         cost = c;
         loc = new Point(co, ro);
-        neighbors = new HashSet<State>();
     }
 
     public int getCost() {
@@ -54,6 +53,11 @@ public class State implements Comparable<State>{
         }
         return true;
     }
+    
+    @Override
+    public String toString(){
+        return "X: "+ (int)loc.getX() + " Y: " + (int)loc.getY() + " Cost: " + cost;
+    }
 
     public Point getLocation(){
         return loc;
@@ -64,7 +68,8 @@ public class State implements Comparable<State>{
         int down = (int) loc.getX() + 1;
         int right = (int) loc.getY() - 1;
         int left = (int) loc.getY() + 1;
-              
+        Set<State> neighbors = new HashSet<State>();  
+        
         neighbors.add(new State(1, (int)loc.getY(),top));
         neighbors.add(new State(1, (int)loc.getY(),down));
         neighbors.add(new State(1, right, (int)loc.getX()));
@@ -72,5 +77,4 @@ public class State implements Comparable<State>{
             
         return neighbors;
     }
-    
 }
