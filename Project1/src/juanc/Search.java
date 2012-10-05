@@ -125,7 +125,7 @@ public class Search {
        State min = null;
        for(State s: f){
            //heuristic guides search of min cost
-           if(min == null || ((this.findTotalCost(s, goal)) < (this.findTotalCost(min, goal)))){
+           if(min == null || (this.findTotalCost(s, goal) < this.findTotalCost(min, goal))){
                min = s;
            }
        }
@@ -139,7 +139,7 @@ public class Search {
         
         /*track time elapsed to find solution*/
         long start = System.currentTimeMillis();
-        State goal = this.A_star(1, 1, 1, 7);
+        State goal = this.A_star(1, 1, 1, 10);
         System.out.println("Elapsed A* Search Time: " + (System.currentTimeMillis() - start));
         
         int path_length = 0;
@@ -168,8 +168,7 @@ public class Search {
         if(type == EUCLIDEAN){
             return Math.sqrt((int)(p2.getX() - p1.getX())^2 + (int)(p2.getY() - p1.getY())^2);
         }
-        //return MANHATTAN distance
-        else {
+        else {//return MANHATTAN distance
             return D * (Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY()));
         }
     }
