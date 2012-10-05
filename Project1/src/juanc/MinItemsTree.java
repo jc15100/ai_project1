@@ -5,6 +5,7 @@ NAME: Juan C. Garcia
 CERTIFICATION: I certify that this work is my own and that
                none of it is the work of any other person.
 */
+import java.awt.Point;
 import juanc.Edge;
 import juanc.DisjointSet;
 import java.io.File;
@@ -24,24 +25,13 @@ public class MinItemsTree
     /*Main "Tester" method*/    
     public static void main(String [] args)
     {
-        MinItemsTree test = new MinItemsTree("miles.dat");
-        test.printMinTree(test.minSpanTree());
+        //MinItemsTree test = new MinItemsTree("miles.dat");
+        //test.printMinTree(test.minSpanTree());
     }
     
-    public MinItemsTree(String fname){
-        edges = new ArrayList<Edge>();
-        items = new LinkedList<String>();
-        
-        items.addFirst("milk");
-        items.addFirst("bread");
-        items.addFirst("juice");
-        
-        edges.add(new Edge("bread","milk", 3));
-        edges.add(new Edge("juice","milk", 5));
-        edges.add(new Edge("milk", "bread", 10));
-        edges.add(new Edge("juice", "bread", 5));
-        edges.add(new Edge("milk", "juice", 7));
-        edges.add(new Edge("bread", "juice", 10));
+    public MinItemsTree(ArrayList<Edge> e, LinkedList<String> i){
+        edges = e;
+        items = i;
     }
     
 //    public MinCitiesTree(String fName)
@@ -136,6 +126,16 @@ public class MinItemsTree
         System.out.println("Total Cost: " + totalCost);
         System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$");
     }
+    
+    public int getMinTreeCost(List<Edge> edges){
+        int totalCost = 0;
+        for(Edge e : edges)
+        {
+            totalCost += e.cost();
+        }
+        return totalCost;
+    }
+    
     /*Gets the city and state name only*/
     private String getCleanCityInfo(String cityInfo)
     {

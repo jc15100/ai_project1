@@ -10,17 +10,26 @@ import java.util.Set;
 public class State implements Comparable<State>{
     private int cost;
     private Point loc;
-    
+    private String item;
     
     public State(int c, int ro, int co){
         cost = c;
         loc = new Point(co, ro);
     }
+    
+    public State( int c, String i){
+        cost = c;
+        item = i;
+    }
 
     public int getCost() {
         return cost;
     }
-
+    
+    public String getItem(){
+        return item;
+    }
+    
     public void setCost(int cost) {
         this.cost = cost;
     }
