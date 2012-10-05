@@ -5,29 +5,33 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.PriorityQueue;
+import java.util.LinkedList;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * @author jc15100
  */
 public class Search {
-    public static final int DEFAULT_COST = 0;
-    private int graphSize;
-            
+    public static final int DEFAULT_COST = 1;
+    public static final int EUCLIDEAN = 0;
+    public static final int MANHATTAN = 1;
+    public static final double D = 1.0;
+    public static final double P = 1/50;
     
-    public enum NodeType{
-        WALL, FREE, GOAL
-    }
+    public enum NodeType{ WALL, FREE, GOAL, STEP}
     
+    public static final State NO_PATH = null;
+    private HashMap<State,State> path = new HashMap<State,State>();
+    private HashMap<String, String> order = new HashMap<String, String>();
     private NodeType [][] store;
     
-    /*perform search initialization given a store map with goal shown, 
-     * and initial location in the store given by x0, y0 */ 
+    /*perform search initialization given an ASCII store map*/ 
+    public Search(){
+        
+    }
+    
     public Search(File map){
         
         BufferedReader br = null;
@@ -65,121 +69,284 @@ public class Search {
             System.out.println("Error reading file: " + e.getMessage());
             System.exit(1);
         }
-         
     }
     
-    /*list to be built*/
-    private HashMap<State,State> path = new HashMap<State,State>();
-            
-    //TO DO
-    public void buildBestPath(){
-        
-    }
-    
-    public State removeLeastCost(ArrayList<State> f){
-        int min = f.get(0).getCost();
-        int min_loc = 0;
-        for(int i = 0; i < f.size(); i++){
-            if(f.get(i).getCost() <= min){
-                min = f.get(i).getCost();
-                min_loc = i;
-            }
-        }
-         return f.remove(min_loc);
-    }
-    
-    public State A_star(int y0, int x0, int y1, int x1){
+    /*perform A* search given a start(x0, y0) and a goal(x1,y1)*/
+    public State A_star(int x0, int y0, int x1, int y1){
         ArrayList<State> frontier = new ArrayList<State>();
-        HashSet<State> explored = new HashSet<State>();
+        Set<State> explored = new HashSet<State>();
         
-        State start = new State(0, 0, y0, x0);
+        State start = new State(DEFAULT_COST, y0, x0);
+        Point goal = new Point(y1, x1);
         
         frontier.add(start);
-        
         while(!frontier.isEmpty()){
-            State c = this.removeLeastCost(frontier);
+            //pick least cost from frontier; heuristic used here
+            State current = this.removeLeastCost(frontier, goal);
+           
             //test for goal
-            if (c.getLocation().getX() == x1 && c.getLocation().getY() == y1){
+            if (current.getLocation().getX() == x1 && current.getLocation().getY() == y1){
                 System.out.println("Goal found!");
-                return c;
+                 System.out.println("Explored:" + explored.size());
+                return current;
             }
             //add to explored set
-            explored.add(c);
+            explored.add(current);
+            store[(int)current.getLocation().getY()][(int)current.getLocation().getX()] = NodeType.GOAL;
             
-//////////////debug of explored.contains() should return TRUE if
-            //I compare State(0, 0, 1, 1) and State(5, 5, 1, 1)
-            //but it doesn't. Because explored.contains() is not using
-            //the equals() method
-            //State d = new State(5, 5, 1, 1); 
-            //System.out.println("state: " + d.getCost() + ", " + d.getGCost() + ", " + d.getLocation());
-           // System.out.println(explored.contains(d));
+            //get a set of neighbors around
+            Set<State> neighbors = current.getNeighbors();
             
-            Set<State> neighbors = c.getNeighbors();
-            
-            //check all steps around current
+            //check all around current
             for(State e: neighbors){
+                //if the neighbor is not a wall, process it
                 if(!store[(int)e.getLocation().getY()][(int)e.getLocation().getX()].equals(NodeType.WALL)){
-                    
                     //set cost of neighbor as cost to get there
-                    int co = e.getGCost() + c.getGCost() + h_function(e.getLocation(), new Point(x1,y1));
-                    int g = c.getGCost() + e.getGCost();
-                    e.setCost(co);
-                    e.setGCost(g);
-               
-                    //add to priority queue
-                    if(!explored.contains(e) && !frontier.contains(e) ){
-                    	frontier.add(e);
-                        path.put(e, c);
-                        
-                    }
-                    if(frontier.contains(e)){
-                       State duplicate = frontier.get(frontier.indexOf(e));
-                       if(duplicate.getCost() > e.getCost()){
-                            //replace cost
-                            frontier.remove(frontier.indexOf(duplicate));
-                            frontier.add(e);
-                            path.put(e, c);
-                        }
+                    int g = e.getCost() + current.getCost();
+                    e.setCost(g);
 
+                    //add to priority queue
+                    if(!explored.contains(e) && !frontier.contains(e)){
+                        frontier.add(e);
+                        path.put(e, current);
+                    }
+                    
+                    if(frontier.contains(e)){
+                        int index = frontier.indexOf(e);
+                        if(frontier.get(index).getCost() > this.findTotalCost(e, goal)){
+                            //replace state with lower alternative
+                            frontier.remove(index);
+                            frontier.add(e);
+                            path.put(e,current);
+                        }
                     }
                 }
             }
         }
+       
+        return NO_PATH;
+    }
+    
+    /*perform A* search given a start(x0, y0) and a goal(x1,y1)*/
+    public GraphState A_star(ArrayList<Edge> edges, LinkedList<String> items){
+        
+        ArrayList<GraphState> frontier = new ArrayList<GraphState>();
+        Set<GraphState> explored = new HashSet<GraphState>();
+        
+        GraphState start = new GraphState(0, items.getFirst());
+        frontier.add(start);
+        
+        while(!frontier.isEmpty()){
+            GraphState current = this.removeLeastCost(frontier, edges, items);
+            
+             //test for goal
+            if (current.getItem().equals("checkout")){
+                System.out.println("Goal found!");
+                return current;
+            }
+            explored.add(current);
+           
+            ArrayList<GraphState> successors = this.getSuccessors(current.getItem(), edges);
+            for(GraphState s: successors){
+                s.setCost(s.getCost() + current.getCost());
+                System.out.println(s.getItem());
+                //add to priority queue
+                    if(!explored.contains(s) && !frontier.contains(s)){
+                        frontier.add(s);
+                        order.put(s.getItem(), current.getItem());
+                    }
+                    
+                    if(frontier.contains(s)){
+                        int index = frontier.indexOf(s);
+                        if(frontier.get(index).getCost() > this.findTotalCost(s, edges,items)){
+                            //replace GraphState with lower alternative
+                            frontier.remove(index);
+                            frontier.add(s);
+                            order.put(s.getItem(), current.getItem());
+                        }
+                    }
+            }
+        }
+        
         return null;
+       
     }
     
-    private int h_function(Point p1, Point p2){
-        return (int)Math.sqrt(Math.pow((p2.x - p1.x),2) + Math.pow((p2.y - p1.y),2));
+    private ArrayList<GraphState> getSuccessors(String current, ArrayList<Edge> l){
+        ArrayList<GraphState> successors = new ArrayList<GraphState>();
+        for(Edge e: l){
+            if(e.from().equals(current)){
+                successors.add(new GraphState(0, e.to()));
+            }
+        }
+        return successors;
     }
     
-    public void printSolution(){
-        State init = new State(0,0,18,23);
-        long startTime = System.nanoTime();
-        State goal = this.A_star(18,23,1,1);
-        long endTime = System.nanoTime();
-        long duration = endTime - startTime;
-        duration /= 1000000;
-        System.out.println("Execution Time: " + duration + " ms");
-        int [][] solution = new int[path.size()][2];
-        while(!goal.equals(init)) {
-        	int i = 0;
-        	solution[i][0] = goal.getLocation().y;
-        	solution[i][1] = goal.getLocation().x;
-        	System.out.println("[" + solution[i][0] + ", " + solution[i][1] + "]");
-        	goal = path.get(goal);
+    private GraphState removeLeastCost(ArrayList<GraphState> f, ArrayList<Edge> e, LinkedList<String> i){
+        GraphState min = null;
+        for(GraphState s: f){
+            if(min == null || (this.findTotalCost(s, e, i) < this.findTotalCost(min, e, i))){
+                min = s;
+            }
+        }
+        f.remove(min);
+        return min;
+    }
+    
+    
+    private int findTotalCost(GraphState s, ArrayList<Edge> e, LinkedList<String> i){
+        return  s.getCost() + this.findNearestItem(s, e) + this.getMSTCost(s, e, i) + this.findNearestToCheckOut(s, e);
+    }
+    
+    //gives MST Cost for remaining nodes not including current one and including checkout
+    private int getMSTCost(GraphState s, ArrayList<Edge> e, LinkedList<String> i){
+        //remove current one from consideration
+        this.removeNode(e, s.getItem());
+        i.remove(s.getItem());
+        //get MST cost
+        MinItemsTree mst = new MinItemsTree(e,i);
+        return mst.getMinTreeCost(mst.minSpanTree());
+    }
+    
+    private void removeNode(ArrayList<Edge> e, String s){
+        for(Edge d: e){
+            if(d.from().equals(s) || d.to().equals(s)){
+                e.remove(d);
+            }
         }
     }
     
+    //gives d_n(n): distance to nearest item from current one
+    private int findNearestItem(GraphState s, ArrayList<Edge> le){
+        int min = 0;
+        for(Edge e: le){
+            if(e.from().equals(s.getItem())){
+               if(min == 0 || e.cost() < min){
+                   min = e.cost();
+               }
+            }
+        }
+        return min;
+    }
     
-    public static void main(String[] args){
+    //gives dc_n(n): distance to checkout item nearest to it not including current one
+    private int findNearestToCheckOut(GraphState s, ArrayList<Edge> le){
+        int min = 0;
+        for(Edge e: le){
+            if(e.to().equals("checkout")){
+                if(!e.from().equals(s.getItem())){
+                    if(min == 0 || e.cost() < min){
+                        min = e.cost();
+                    }
+                }
+            }
+        }
+        return min;
+    }
+   
+    /*given a list of GraphStates, remove state with least total cost to goal*/
+    private State removeLeastCost(ArrayList<State> f, Point goal){
+       State min = null;
+       for(State s: f){
+           //heuristic guides search of min cost
+           if(min == null || (this.findTotalCost(s, goal) < this.findTotalCost(min, goal))){
+               min = s;
+           }
+       }
+       f.remove(min);
+       return min;
+    }
+    
+    /*after A* finds a goal, backtracks along explored states to build path*/
+    public void buildSolution(){
+        State init = new State(1,1,1);
         
+        /*track time elapsed to find solution*/
+        long start = System.currentTimeMillis();
+        State goal = this.A_star(1, 1, 7, 7);
+        System.out.println("Elapsed A* Search Time: " + (System.currentTimeMillis() - start));
+        
+        int path_length = 0;
+        
+        //show init on map
+        store[(int)init.getLocation().getY()][(int)init.getLocation().getX()] = NodeType.STEP;
+        while(!goal.equals(init)){
+            //show steps on map
+            store[(int)goal.getLocation().getY()][(int)goal.getLocation().getX()] = NodeType.STEP;
+            
+            goal = path.get(goal);
+            path_length++;
+            this.showPathOnMap();
+        }
+        
+        System.out.println("Shortest Path Length: " + path_length);
+    }
+    
+    public void buildSolution(String goal){
+        String init = "entrance";
+        
+        
+        while(!goal.equals(init)){
+            goal = order.get(goal);
+            System.out.println(goal);
+        }
+      
+    }
+    
+    /*calculate the total cost for a state given a goal; includes heuristic*/
+    public double findTotalCost(State s, Point goal){
+        return (s.getCost() + h_function(s.getLocation(),goal.getLocation(), MANHATTAN));
+    }
+    
+    /*calculate heuristic for 2 points; scales heuristic to break ties*/
+    public double h_function(Point p1, Point p2, int type){
+        if(type == EUCLIDEAN){
+            return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(),2));
+        }
+        else {//return MANHATTAN distance
+            double h =  Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY());
+            return (h *= (1.0 + P));
+            
+        }
+       
+    }
+    
+    /*draw the path found on the ASCII map*/
+    private void showPathOnMap(){
+        for(int y = 0; y < store.length; y++){
+            for(int x = 0; x < store.length; x++){
+                String map = null;
+                switch(store[y][x]){
+                    case WALL:
+                        map = "#";
+                        break;
+                    case FREE:
+                        map = " ";
+                        break;
+                    case STEP:
+                        map = "x";
+                        break;
+                    case GOAL:
+                        map = ".";
+                        break;
+                }
+                System.out.print(map);
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
+   
+    
+    /*public static void main(String[] args){ 
         if (args.length != 1) {
             System.out.println("Error: missing map filename or more arguments than expected!");
             System.exit(1);
         }
-
+        
         File map = new File(args[0]); 
         Search test = new Search(map); 
-        test.printSolution();
-    }
+        test.buildSolution();
+        
+    }*/
 }
