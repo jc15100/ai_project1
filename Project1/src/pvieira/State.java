@@ -9,49 +9,38 @@ import java.util.Set;
  */
 public class State implements Comparable<State>{
     private int cost;
-    private int gcost;
     private Point loc;
-    private Set<State> neighbors;
+    private String item;
     
-    public State(int c, int g, int ro, int co){
+    public State(int c, int ro, int co){
         cost = c;
-        gcost = g;
         loc = new Point(co, ro);
-        neighbors = new HashSet<State>();
+    }
+    
+    public State( int c, String i){
+        cost = c;
+        item = i;
     }
 
     public int getCost() {
         return cost;
     }
-
+    
+    public String getItem(){
+        return item;
+    }
+    
     public void setCost(int cost) {
         this.cost = cost;
     }
     
-    public int getGCost() {
-    	return gcost;
-    }
-    
-    public void setGCost(int gcost) {
-    	this.gcost = gcost;
-    }
-    
-    /*@Override
-    public int compareTo (State other){
-        int otherCost = other.getCost();
-        System.out.println("using compareto() method");
-        
-        return cost < otherCost ? -1: cost > otherCost ? 1 : 0;
-    }*/
-    
     @Override
     public int compareTo (State other){
-        int otherX = other.getLocation().x;
-        int otherY = other.getLocation().y;
+        int otherCost = other.getCost();
         
-        return loc.x < otherX || loc.y < otherY ? -1: loc.x > otherX || loc.y > otherY ? 1 : 0;
+        return cost < otherCost ? -1: cost > otherCost ? 1 : 0;
     }
-    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -73,23 +62,27 @@ public class State implements Comparable<State>{
         }
         return true;
     }
+    
+    public String toString(){
+        return "X: "+ (int)loc.getX() + " Y: " + (int)loc.getY() + " Cost: " + cost;
+    }
 
     public Point getLocation(){
         return loc;
     }
     
     public Set<State> getNeighbors(){
-        int top = (int) loc.getY() - 1;
-        int down = (int) loc.getY() + 1;
-        int right = (int) loc.getX() + 1;
-        int left = (int) loc.getX() - 1;
-              
-        neighbors.add(new State(1, 1, top, (int)loc.getX()));
-        neighbors.add(new State(1, 1, down, (int)loc.getX()));
-        neighbors.add(new State(1, 1, (int)loc.getY(), right));
-        neighbors.add(new State(1, 1, (int)loc.getY(), left));
+        int top = (int) loc.getX() - 1;
+        int down = (int) loc.getX() + 1;
+        int right = (int) loc.getY() - 1;
+        int left = (int) loc.getY() + 1;
+        Set<State> neighbors = new HashSet<State>();  
+        
+        neighbors.add(new State(1, (int)loc.getY(),top));
+        neighbors.add(new State(1, (int)loc.getY(),down));
+        neighbors.add(new State(1, right, (int)loc.getX()));
+        neighbors.add(new State(1, left, (int)loc.getX()));
             
         return neighbors;
     }
-    
 }
