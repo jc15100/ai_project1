@@ -133,12 +133,14 @@ public class Search {
         ArrayList<GraphState> frontier = new ArrayList<GraphState>();
         Set<GraphState> explored = new HashSet<GraphState>();
         
-        GraphState start = new GraphState(0, items.getFirst());
-        frontier.add(start);
+        GraphState current = new GraphState(0, items.getFirst());
+        frontier.add(current);
         
         while(!frontier.isEmpty()){
-            GraphState current = this.removeLeastCost(frontier, edges, items);
-            
+            GraphState old = this.removeLeastCost(frontier, edges, items);
+            if(!old.getItem().equals("entrance")) order.put(old.getItem(), current.getItem());
+            System.out.println(current.getItem());
+            current = old;
              //test for goal
             if (current.getItem().equals("checkout")){
                 System.out.println("Goal found!");
@@ -149,11 +151,13 @@ public class Search {
             ArrayList<GraphState> successors = this.getSuccessors(current.getItem(), edges);
             for(GraphState s: successors){
                 s.setCost(s.getCost() + current.getCost());
-                System.out.println(s.getItem());
+               // System.out.print(s.getItem() + ": ");
+               // System.out.print(s.getCost() + "\n");
                 //add to priority queue
                     if(!explored.contains(s) && !frontier.contains(s)){
                         frontier.add(s);
-                        order.put(s.getItem(), current.getItem());
+                       // order.put(s.getItem(), current.getItem());
+                        //System.out.println(order.get(current.getItem()));
                     }
                     
                     if(frontier.contains(s)){
@@ -162,10 +166,12 @@ public class Search {
                             //replace GraphState with lower alternative
                             frontier.remove(index);
                             frontier.add(s);
-                            order.put(s.getItem(), current.getItem());
+                            //order.put(s.getItem(), current.getItem());
                         }
                     }
             }
+            this.removeNode(edges, current.getItem());
+            
         }
         
         return null;
@@ -176,7 +182,7 @@ public class Search {
         ArrayList<GraphState> successors = new ArrayList<GraphState>();
         for(Edge e: l){
             if(e.from().equals(current)){
-                successors.add(new GraphState(0, e.to()));
+                successors.add(new GraphState(e.cost(), e.to()));
             }
         }
         return successors;
@@ -187,6 +193,7 @@ public class Search {
         for(GraphState s: f){
             if(min == null || (this.findTotalCost(s, e, i) < this.findTotalCost(min, e, i))){
                 min = s;
+                
             }
         }
         f.remove(min);
@@ -195,24 +202,31 @@ public class Search {
     
     
     private int findTotalCost(GraphState s, ArrayList<Edge> e, LinkedList<String> i){
-        return  s.getCost() + this.findNearestItem(s, e) + this.getMSTCost(s, e, i) + this.findNearestToCheckOut(s, e);
+        int c =  s.getCost() + this.findNearestItem(s, e) + this.findNearestToCheckOut(s, e) + this.getMSTCost(s, e, i);
+        System.out.println(s.getItem() + ": " + c);
+        return  c;
     }
     
     //gives MST Cost for remaining nodes not including current one and including checkout
     private int getMSTCost(GraphState s, ArrayList<Edge> e, LinkedList<String> i){
         //remove current one from consideration
-        this.removeNode(e, s.getItem());
-        i.remove(s.getItem());
+        //this.removeNode(e, s.getItem());
+        //i.remove(s.getItem());
         //get MST cost
         MinItemsTree mst = new MinItemsTree(e,i);
         return mst.getMinTreeCost(mst.minSpanTree());
     }
     
     private void removeNode(ArrayList<Edge> e, String s){
-        for(Edge d: e){
-            if(d.from().equals(s) || d.to().equals(s)){
-                e.remove(d);
+    	System.out.println("[" + s + "]");
+        for(int i = 0; i < e.size(); i++) {
+            if(e.get(i).from().equals(s) || e.get(i).to().equals(s)){
+            	e.remove(i);
+            	i--;
             }
+        } 
+        for(int i = 0; i < e.size(); i++) {
+        	System.out.println(e.get(i));
         }
     }
     
@@ -220,11 +234,13 @@ public class Search {
     private int findNearestItem(GraphState s, ArrayList<Edge> le){
         int min = 0;
         for(Edge e: le){
-            if(e.from().equals(s.getItem())){
-               if(min == 0 || e.cost() < min){
-                   min = e.cost();
-               }
-            }
+        	if(e != null){
+	            if(e.from().equals(s.getItem())){
+	               if(min == 0 || e.cost() < min){
+	                   min = e.cost();
+	               }
+	            }
+        	}
         }
         return min;
     }
@@ -287,8 +303,8 @@ public class Search {
         
         
         while(!goal.equals(init)){
-            goal = order.get(goal);
-            System.out.println(goal);
+        	System.out.println(goal);
+        	goal = order.get(goal);
         }
       
     }
