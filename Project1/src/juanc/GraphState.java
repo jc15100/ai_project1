@@ -6,11 +6,13 @@ package juanc;
 public class GraphState implements Comparable<GraphState>{
    
     private int cost;
+    private int gcost;
     private String item;
     
-    public GraphState( int c, String s){
+    public GraphState(int c, int g, String s){
         cost = c;
         item = s;
+        gcost= g;
     }
 
     @Override
@@ -41,6 +43,14 @@ public class GraphState implements Comparable<GraphState>{
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+    
+    public int getGCost(){
+        return gcost;
+    }
+    
+    public void setGCost(int g){
+        this.gcost = g;
     }
     
     @Override
