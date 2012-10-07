@@ -19,7 +19,7 @@ public class Search {
     public static final double D = 1.0;
     public static final double P = 1/50;
     
-    public enum NodeType{ WALL, FREE, GOAL, STEP, ITEM}
+    public enum NodeType{ WALL, FREE, EXPLORED, STEP, ITEM}
     
     public static final State NO_PATH = null;
     public static final GraphState NO_ORDER = null;
@@ -64,9 +64,6 @@ public class Search {
                         case '#':
                             store[y][x] = NodeType.WALL;
                             break;
-                        case 'C':
-                            store[y][x] = NodeType.GOAL;
-                            break;
                     }
                 }
             }
@@ -99,7 +96,7 @@ public class Search {
             }
             //add to explored set
             explored.add(current);
-            //store[(int)current.getLocation().getY()][(int)current.getLocation().getX()] = NodeType.GOAL;
+            //store[(int)current.getLocation().getY()][(int)current.getLocation().getX()] = NodeType.EXPLORED;
             
             //get a set of neighbors around
             Set<State> neighbors = current.getNeighbors();
@@ -132,153 +129,12 @@ public class Search {
         }
         return NO_PATH;
     }
-
     
-    public GraphState A_star(){
-        
-        ArrayList<GraphState> frontier = new ArrayList<GraphState>();
-        Set <GraphState> Explored = new HashSet<GraphState>();
-        
-        GraphState current = new GraphState(0, 0, "entrance");
-        frontier.add(current);
-        //GraphState old = null;
-
-        while(!frontier.isEmpty()){
-            GraphState old = this.removeLeastCost(frontier, current);
-            if(!old.getItem().equals("entrance")){
-                order.put(old.getItem(), current.getItem());
-            }
-            current = old;
-             
-            /*if(current.getItem().equals("bread")){
-                System.out.println("");
-            }*/
-            //test for goal
-            if (current.getItem().equals("checkout")){
-                System.out.println("Goal found!");
-                return current;
-            }
-            Explored.add(current);
-           // System.out.println("Current: " + current.getItem());
-            ArrayList<GraphState> successors = this.getSuccessors(current.getItem());
-            for(GraphState s: successors){
-                s.setGCost(s.getGCost() + current.getGCost());
-                s.setCost(this.findTotalCost(s,current, -2));
-                
-                //System.out.println(s);
-                //add to priority queue
-                    if(!Explored.contains(s) && !frontier.contains(s)){
-                        frontier.add(s);
-                        //order.put(s.getItem(), current.getItem());
-                    }
-                    
-                    if(frontier.contains(s)){
-                        int index = frontier.indexOf(s);
-                        //this.findTotalCost(frontier.get(index), current, -1)
-                        if(frontier.get(index).getCost() > s.getCost()){//this.findTotalCost(s, current, 0)){
-                            //replace state with lower alternative
-                            frontier.remove(index);
-                            frontier.add(s);
-                            //order.put(s.getItem(), current.getItem());
-                        }
-                    }
-            }
-            this.removeNode(current.getItem(), edges);
-        }
-        
-        return NO_ORDER;
+    /*calculate the total cost for a state given a goal; includes heuristic*/
+    public double findTotalCost(State s, Point goal){
+        return (s.getCost() + h_function(s.getLocation(),goal.getLocation(), MANHATTAN));
     }
     
-    private ArrayList<GraphState> getSuccessors(String current){
-        ArrayList<GraphState> successors = new ArrayList<GraphState>();
-        for(Edge e: edges){
-            if(e.from().equals(current)){
-                successors.add(new GraphState(0,e.cost(), e.to()));
-            }
-        }
-        return successors;
-    }
-    
-    private GraphState removeLeastCost(ArrayList<GraphState> f, GraphState current){
-        GraphState min = null;
-        for(GraphState s: f){
-            if((min == null || s.getCost() < min.getCost())){//this.findTotalCost(min, current, 2))){
-                if(!s.getItem().equals("checkout") || f.size() == 1){
-                    min = s;
-                }
-            }
-        }
-        f.remove(min);
-        return min;
-    }
-    
-    
-    private int findTotalCost(GraphState s, GraphState c, int kind){
-        /*System.out.println("\t\t Total for "+ kind + " " + s.getItem() + " is " + s.getGCost() + "+" + this.findNearestItem(c) + "+" + this.getMSTCost(c,s) + 
-                "+" +this.findNearestToCheckOut(s) + "=" + ( s.getGCost() + this.findNearestItem(c) + this.getMSTCost(c,s) + this.findNearestToCheckOut(s)));*/
-        return  s.getGCost() + this.findNearestItem(c) + this.getMSTCost(c,s) + this.findNearestToCheckOut(s);
-    }
-    
-    //gives MST Cost for remaining nodes not including current one and including checkout
-    private int getMSTCost(GraphState s, GraphState n){
-        //remove current one from consideration
-        ArrayList<Edge> reduced = new ArrayList<Edge>(edges);
-        LinkedList<String> less = new LinkedList<String>(items);
-        
-        this.removeNode(s.getItem(), reduced);
-        less.remove(s.getItem());
-        
-        /*this.removeNode(n.getItem(), reduced);
-        less.remove(n.getItem());*/
-        
-        MinItemsTree mst = new MinItemsTree(reduced, less);
-        //System.out.println("\t" + s.getItem() +", " + n.getItem() + " MST cost: " + mst.getMinTreeCost(mst.minSpanTree()));
-        
-        //System.out.println("");
-        //mst.printMinTree(mst.minSpanTree());
-        //System.out.println("");
-        
-        return mst.getMinTreeCost(mst.minSpanTree());
-    }
-    
-    private void removeNode(String s, ArrayList<Edge> list){
-        ArrayList<Integer> toRemove = new ArrayList<Integer>();
-        for(int i = 0; i < list.size(); i++){
-            if(list.get(i).from().equals(s) || list.get(i).to().equals(s)){
-                list.remove(i);
-                i--;
-            }
-        }
-    }
-    
-    //gives d_n(n): distance to nearest item from current one
-    private int findNearestItem(GraphState s){
-        int min = 0;
-        for(Edge e: edges){
-            if(e.from().equals(s.getItem())){
-               if(min == 0 || e.cost() < min){
-                   min = e.cost();
-               }
-            }
-        }
-        return min;
-    }
-    
-    //gives dc_n(n): distance to checkout item nearest to it not including current one
-    private int findNearestToCheckOut(GraphState s){
-        int min = 0;
-        for(Edge e: edges){
-            if(e.to().equals("checkout")){
-                if(!e.from().equals(s.getItem())){
-                    if(min == 0 || e.cost() < min){
-                        min = e.cost();
-                    }
-                }
-            }
-        }
-        return min;
-    }
-   
     /*given a list of states, remove state with least total cost to goal*/
     private State removeLeastCost(ArrayList<State> f, Point goal){
        State min = null;
@@ -292,10 +148,9 @@ public class Search {
        return min;
     }
     
-    /*after A* finds a goal, backtracks along explored states to build path*/
+    /*after A* finds a goal, connects explored states to build path*/
     public void buildSolution(Point from, Point to){
         State init = new State(1,(int)from.getY(), (int)from.getX());
-        
         /*track time elapsed to find solution*/
         long start = System.currentTimeMillis();
         State goal = this.A_star((int)from.getX(), (int)from.getY(),(int)to.getX(), (int)to.getY());
@@ -313,41 +168,7 @@ public class Search {
             path_length++;
             this.showPathOnMap();
         }
-        
         System.out.println("Shortest Path Length: " + path_length);
-    }
-    
-    public ArrayList<String> buildSolution(String goal){
-        String init = "entrance";
-        ArrayList<String> ordered = new ArrayList<String>();
-        
-        System.out.println(goal);
-        while(!goal.equals(init)){
-            ordered.add(goal);
-            goal = order.get(goal);
-            
-            System.out.println(goal);
-        }
-        ordered.add(init);
-        return ordered;
-    }
-    
-    /*calculate the total cost for a state given a goal; includes heuristic*/
-    public double findTotalCost(State s, Point goal){
-        return (s.getCost() + h_function(s.getLocation(),goal.getLocation(), MANHATTAN));
-    }
-    
-    /*calculate heuristic for 2 points; scales heuristic to break ties*/
-    public double h_function(Point p1, Point p2, int type){
-        if(type == EUCLIDEAN){
-            return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(),2));
-        }
-        else {//return MANHATTAN distance
-            double h =  Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY());
-            return (h *= (1.0 + P));
-            
-        }
-       
     }
     
     /*draw the path found on the ASCII map*/
@@ -365,7 +186,7 @@ public class Search {
                     case STEP:
                         map = "x";
                         break;
-                    case GOAL:
+                    case EXPLORED:
                         map = ".";
                         break;
                 }
@@ -376,13 +197,177 @@ public class Search {
         System.out.println("");
     }
     
+    /*perform A* to solve TSP given a list of items and their locations in a store*/
+    public GraphState A_star() {
+
+        ArrayList<GraphState> frontier = new ArrayList<GraphState>();
+        Set<GraphState> explored = new HashSet<GraphState>();
+
+        GraphState current = new GraphState(0, 0, "entrance");
+        frontier.add(current);
+
+        while (!frontier.isEmpty()) {
+            //remove least cost 
+            GraphState old = this.removeLeastCost(frontier, current);
+
+            //only add to order those which are selected as current
+            if (!old.getItem().equals("entrance")) {
+                order.put(old.getItem(), current.getItem());
+            }
+            current = old;
+
+            //test for goal
+            if (current.getItem().equals("checkout")) {
+                System.out.println("Goal found!");
+                return current;
+            }
+
+            //add to explored
+            explored.add(current);
+
+            ArrayList<GraphState> successors = this.getSuccessors(current.getItem());
+            for (GraphState s : successors) {
+
+                //save internal costs of succesors for later comparison
+                s.setGCost(s.getGCost() + current.getGCost());
+                s.setCost(this.findTotalCost(s, current));
+
+                //add to frontier
+                if (!explored.contains(s) && !frontier.contains(s)) {
+                    frontier.add(s);
+                }
+                
+                //check to update frontier contents with lower cost alternative
+                if (frontier.contains(s)) {
+                    int index = frontier.indexOf(s);
+                    if (frontier.get(index).getCost() > s.getCost()) {
+                        frontier.remove(index);
+                        frontier.add(s);
+                    }
+                }
+            }
+            this.removeNode(current.getItem(), edges);
+        }
+        return NO_ORDER;
+    }
+    
+    /*get a list of unvisited items from the current one*/
+    private ArrayList<GraphState> getSuccessors(String current){
+        ArrayList<GraphState> successors = new ArrayList<GraphState>();
+        for(Edge e: edges){
+            if(e.from().equals(current)){
+                successors.add(new GraphState(0,e.cost(), e.to()));
+            }
+        }
+        return successors;
+    }
+    
+    /*remove least cost item; special considerations to ensure goal is visited last*/
+    private GraphState removeLeastCost(ArrayList<GraphState> f, GraphState current){
+        GraphState min = null;
+        for(GraphState s: f){
+            if((min == null || s.getCost() < min.getCost())){
+                if(!s.getItem().equals("checkout") || f.size() == 1){
+                    min = s;
+                }
+            }
+        }
+        f.remove(min);
+        return min;
+    }
+    
+    /*find total cost for a current item given itself and its parent*/
+    private int findTotalCost(GraphState s, GraphState c){
+        /*         g(n)      +         d_n(n)          +         MST(n)     +     dc_n(n) */            
+        return  s.getGCost() + this.findNearestItem(c) + this.getMSTCost(c) + this.findNearestToCheckOut(s);
+    }
+    
+    /*gives MST Cost for remaining nodes not including current one*/
+    private int getMSTCost(GraphState s){
+        //make copy of global list of edges/items and remove current one from consideration
+        ArrayList<Edge> reduced = new ArrayList<Edge>(edges);
+        LinkedList<String> less = new LinkedList<String>(items);
+        
+        this.removeNode(s.getItem(), reduced);
+        less.remove(s.getItem());
+        
+        //calculate MST cost
+        MinItemsTree mst = new MinItemsTree(reduced, less);
+        return mst.getMinTreeCost(mst.minSpanTree());
+    }
+    
+    /*remove all edges that current node s is a part of*/
+    private void removeNode(String s, ArrayList<Edge> list){
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).from().equals(s) || list.get(i).to().equals(s)){
+                list.remove(i);
+                i--;
+            }
+        }
+    }
+    
+    /*gives d_n(n): distance to nearest item from current one*/
+    private int findNearestItem(GraphState s){
+        int min = 0;
+        for(Edge e: edges){
+            if(e.from().equals(s.getItem())){
+               if(min == 0 || e.cost() < min){
+                   min = e.cost();
+               }
+            }
+        }
+        return min;
+    }
+    
+    /*gives dc_n(n): distance to checkout item nearest to it not including current one*/
+    private int findNearestToCheckOut(GraphState s){
+        int min = 0;
+        for(Edge e: edges){
+            if(e.to().equals("checkout")){
+                if(!e.from().equals(s.getItem())){
+                    if(min == 0 || e.cost() < min){
+                        min = e.cost();
+                    }
+                }
+            }
+        }
+        return min;
+    } 
+    
+    /*after A* finds a goal, connects explored items to make TSP order*/
+    public ArrayList<String> buildSolution(String goal){
+        String init = "entrance";
+        ArrayList<String> ordered = new ArrayList<String>();
+        
+        System.out.println(goal);
+        while(!goal.equals(init)){
+            ordered.add(goal);
+            goal = order.get(goal);
+            
+            System.out.println(goal);
+        }
+        ordered.add(init);
+        return ordered;
+    }
+    
+    /*calculate heuristic for 2 points; scales heuristic to break ties*/
+    public double h_function(Point p1, Point p2, int type){
+        if(type == EUCLIDEAN){
+            return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(),2));
+        }
+        else {//return MANHATTAN distance
+            double h =  Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY());
+            return (h *= (1.0 + P));
+        }
+    }
+    
     public static void main(String[] args){
         long start = System.currentTimeMillis();
 
-        /*if (args.length != 1) {
+        if (args.length != 1) {
             System.out.println("Error: missing map filename or more arguments than expected!");
             System.exit(1);
-        }*/
+        }
 
         File map = new File(args[0]);
         Search test = new Search(map);
@@ -431,10 +416,10 @@ public class Search {
         ArrayList<String> o = test2.buildSolution(output);
         
         
-        /*for(int i = o.size()-1; i > 0; i--){
+        for(int i = o.size()-1; i > 0; i--){
             test.buildSolution(toShop.get(o.get(i)),toShop.get(o.get(i-1)));
-        }*/
-
+        }
+        //test.buildSolution(new Point(1,1), new Point(28,28));
         System.out.println("TOTAL ELAPSED TIME: " + (System.currentTimeMillis() - start));
     }
 }

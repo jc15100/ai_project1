@@ -3,7 +3,7 @@ package juanc;
 /**
  * @author jc15100
  */
-public class GraphState implements Comparable<GraphState>{
+public class GraphState{
    
     private int cost;
     private int gcost;
@@ -60,10 +60,5 @@ public class GraphState implements Comparable<GraphState>{
 
      public String getItem(){
         return item;
-    }
-     
-    @Override
-    public int compareTo(GraphState t) {
-        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
