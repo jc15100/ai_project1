@@ -424,8 +424,8 @@ public class Search {
        
         System.out.println("SHOPPING ORDER: ");
         int totalShoppingDistance = 0;
-        int step = 0;
-        
+
+        char step = 'A';
         //find shortest path between items in order given
         for (int i = order.size() - 1; i > 0; i--) {
             System.out.println("\t"+ step++ +"-"+ order.get(i));
@@ -433,14 +433,17 @@ public class Search {
         }
         System.out.println("\t"+ step + "-" + order.get(0));
         
+        //time keeping ends after finding path between each pair
+        long end = System.currentTimeMillis();
         
+        /*PRINT OUTPUTS*/
         //show items initials in the map
         char[][]store = test.showPathOnMap();
-        step = 0;
+        step = 'A';
         for(int i = order.size() -1; i > 0; i--){
-            store[(int)toShop.get(order.get(i)).getY()][(int)toShop.get(order.get(i)).getX()] = order.get(i).charAt(0);
+            store[(int)toShop.get(order.get(i)).getY()][(int)toShop.get(order.get(i)).getX()] = step++;
         }
-        store[(int)toShop.get(order.get(0)).getY()][(int)toShop.get(order.get(0)).getX()] = order.get(0).charAt(0);
+        store[(int)toShop.get(order.get(0)).getY()][(int)toShop.get(order.get(0)).getX()] = step++;
         
         //print out shopping map with paths and items shown
         System.out.println("\nSHOPPING MAP: ");
@@ -452,6 +455,6 @@ public class Search {
         }
         //some stats
         System.out.println("\nTOTAL SHOPPING DISTANCE: " + totalShoppingDistance + " steps.");
-        System.out.println("TOTAL ELAPSED TIME: " + (System.currentTimeMillis() - start) + " ms.\n");
+        System.out.println("TOTAL ELAPSED TIME: " + (end - start) + " ms.\n");
     }
 }
