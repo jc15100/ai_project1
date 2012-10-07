@@ -139,10 +139,10 @@ public class Search {
         ArrayList<GraphState> frontier = new ArrayList<GraphState>();
         Set <GraphState> Explored = new HashSet<GraphState>();
         
-        GraphState current = new GraphState(0, 0, items.getFirst());
+        GraphState current = new GraphState(0, 0, "entrance");
         frontier.add(current);
         //GraphState old = null;
-        
+
         while(!frontier.isEmpty()){
             GraphState old = this.removeLeastCost(frontier, current);
             if(!old.getItem().equals("entrance")){
@@ -187,7 +187,6 @@ public class Search {
         }
         
         return NO_ORDER;
-       
     }
     
     private ArrayList<GraphState> getSuccessors(String current){
@@ -204,10 +203,7 @@ public class Search {
         GraphState min = null;
         for(GraphState s: f){
             if((min == null || s.getCost() < min.getCost())){//this.findTotalCost(min, current, 2))){
-                if(!s.getItem().equals("checkout")){
-                    min = s;
-                }
-                if(f.size() == 1){
+                if(!s.getItem().equals("checkout") || f.size() == 1){
                     min = s;
                 }
             }
@@ -399,10 +395,12 @@ public class Search {
         toShop.put("bread", new Point(16, 22));
         toShop.put("juice", new Point(25, 25));
         toShop.put("eggs", new Point(25, 2));
-        
+        toShop.put("cereal", new Point(4, 25));
         toShop.put("checkout", new Point(28, 2));
         toShop.put("entrance", new Point(1, 1));
-        
+        toShop.put("beans", new Point(13, 8));
+        toShop.put("icecream", new Point(22, 13));
+        toShop.put("rice", new Point(1, 28));
 
         Set<String> keys = toShop.keySet();
         ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -410,7 +408,7 @@ public class Search {
 
         for (String from : keys) {
             //populate items LinkedList for MST
-            items.addFirst(from);
+            items.add(from);
             for (String to : keys) {
                 //create edges from every item to every other item in the list
                 if (!from.equals(to) && !(from.equals("entrance") && (to.equals("checkout"))) 
@@ -422,19 +420,20 @@ public class Search {
         
         /*for(Edge e: edges){
             System.out.println(e);
-        }*/
+        }
         
-        System.out.println(edges.size());
-        System.out.println(items.size());
+        for(String s: items){
+            System.out.println(s);
+        }*/
         
         Search test2 = new Search(edges, items);
         String output = test2.A_star().getItem();
         ArrayList<String> o = test2.buildSolution(output);
         
         
-        for(int i = o.size()-1; i > 0; i--){
+        /*for(int i = o.size()-1; i > 0; i--){
             test.buildSolution(toShop.get(o.get(i)),toShop.get(o.get(i-1)));
-        }
+        }*/
 
         System.out.println("TOTAL ELAPSED TIME: " + (System.currentTimeMillis() - start));
     }
