@@ -178,13 +178,13 @@ public class Search {
                 
                 switch (store[y][x]) {
                     case WALL:
-                        map[y][x] = '▓';
+                        map[y][x] = '█';
                         break;
                     case FREE:
                         map[y][x] = ' ';
                         break;
                     case STEP:
-                        map[y][x] = '*';
+                        map[y][x] = '▒';
                         break;
                     case EXPLORED:
                         map[y][x] = '.';
@@ -398,6 +398,8 @@ public class Search {
         toShop.put("rice", new Point(1, 28));
         toShop.put("water", new Point(2, 28));
         toShop.put("chips", new Point(4, 28));
+        toShop.put("ice", new Point(8, 24));
+        toShop.put("choco", new Point(22, 28));
         Set<String> keys = toShop.keySet();
         ArrayList<Edge> edges = new ArrayList<Edge>();
         LinkedList<String> items = new LinkedList<String>();
