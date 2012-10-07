@@ -178,7 +178,7 @@ public class Search {
                 String map = null;
                 switch (store[y][x]) {
                     case WALL:
-                        map = "#";
+                        map = "▓";
                         break;
                     case FREE:
                         map = " ";
