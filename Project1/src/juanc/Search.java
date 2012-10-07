@@ -14,25 +14,25 @@ import java.util.Set;
  * @author jc15100
  */
 public class Search {
-
+    public enum NodeType {
+        WALL, FREE, EXPLORED, STEP, ITEM
+    }
+    
     public static final int DEFAULT_COST = 1;
     public static final int EUCLIDEAN = 0;
     public static final int MANHATTAN = 1;
     public static final double D = 1.0;
     public static final double P = 1 / 50;
-
-    public enum NodeType {
-        WALL, FREE, EXPLORED, STEP, ITEM
-    }
     public static final State NO_PATH = null;
     public static final GraphState NO_ORDER = null;
+    
     private HashMap<State, State> path = new HashMap<State, State>();
     private HashMap<String, String> order = new HashMap<String, String>();
     private NodeType[][] store;
     private ArrayList<Edge> edges;
     private LinkedList<String> items;
+    private ArrayList<Edge> cpy_edges;
     
-    private int leastOrderCost = 0;
     /*perform search initialization given an ASCII store map*/
     public Search(File map, ArrayList<Edge> eds, LinkedList<String> its) {
         edges = eds;
@@ -87,7 +87,6 @@ public class Search {
 
             //test for goal
             if (current.getLocation().getX() == x1 && current.getLocation().getY() == y1) {
-                System.out.println("\t Goal found!");
                 //System.out.println("Explored:" + explored.size());
                 return current;
             }
@@ -202,7 +201,10 @@ public class Search {
 
         GraphState current = new GraphState(0, 0, "entrance");
         frontier.add(current);
-
+        
+        //build copy of edge list for future use in cost determination
+        cpy_edges = new ArrayList<Edge>(edges);
+        
         while (!frontier.isEmpty()) {
             //remove least cost 
             GraphState old = this.removeLeastCost(frontier, current);
@@ -215,8 +217,6 @@ public class Search {
 
             //test for goal
             if (current.getItem().equals("checkout")) {
-                System.out.println("\t Goal found!");
-                System.out.println("Least order cost: "+ leastOrderCost);
                 return current;
             }
 
@@ -337,13 +337,17 @@ public class Search {
         String init = "entrance";
         ArrayList<String> ordered = new ArrayList<String>();
         
+        int leastOrderCost = 0;
+        
         System.out.println(goal);
         while (!goal.equals(init)) {
             ordered.add(goal);
+            leastOrderCost += this.findEdgeCost(goal, order.get(goal));
+ 
             goal = order.get(goal);
-
             System.out.println(goal);
         }
+        System.out.println("LEAST ORDER COST: " + leastOrderCost);
         ordered.add(init);
         return ordered;
     }
@@ -358,6 +362,16 @@ public class Search {
         }
     }
 
+    /*find cost of edges for least order cost calculation*/
+    private int findEdgeCost(String from, String to){
+        for(Edge e: cpy_edges){
+            if(e.from().equals(from) && e.to().equals(to)){
+                return e.cost();
+            }
+        }
+        return 0;
+    }
+    
     public static void main(String[] args) {
         long start = System.currentTimeMillis();
         
@@ -373,10 +387,10 @@ public class Search {
         toShop.put("fg", new Point(28, 3));
         toShop.put("milk", new Point(4, 15));
         toShop.put("hotdogs", new Point(13, 20));
-        //toShop.put("bread", new Point(16, 22));
+        toShop.put("bread", new Point(16, 22));
         //toShop.put("juice", new Point(25, 25));
         //toShop.put("eggs", new Point(25, 2));
-        //toShop.put("cereal", new Point(4, 25));
+        toShop.put("cereal", new Point(4, 25));
         toShop.put("checkout", new Point(28, 2));
         toShop.put("entrance", new Point(1, 1));
         //toShop.put("beans", new Point(13, 8));
@@ -400,14 +414,11 @@ public class Search {
                 }
             }
         }
-
-         for(Edge e: edges){
+        
+        /* for(Edge e: edges){
          System.out.println(e);
          }
-         /*
-         for(String s: items){
-         System.out.println(s);
-         }*/
+         */ 
         
         String output = test.A_star().getItem();
         ArrayList<String> o = test.buildSolution(output);
@@ -416,7 +427,7 @@ public class Search {
         for (int i = o.size() - 1; i > 0; i--) {
             totalShoppingDistance += test.buildSolution(toShop.get(o.get(i)), toShop.get(o.get(i - 1)));
         }
-        //test.buildSolution(new Point(1,1), new Point(28,28));
+
         System.out.println("\nTOTAL SHOPPING DISTANCE: " + totalShoppingDistance);
         System.out.println("TOTAL ELAPSED TIME: " + (System.currentTimeMillis() - start) + "\n");
     }
