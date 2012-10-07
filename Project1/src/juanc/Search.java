@@ -432,6 +432,7 @@ public class Search {
             System.out.println("\t"+ step++ +"-"+ order.get(i));
             totalShoppingDistance += test.buildSolution(toShop.get(order.get(i)), toShop.get(order.get(i - 1)));
         }
+        System.out.println("\t"+ step + "-" + order.get(0));
         System.out.println("\nSHOPPING MAP: ");
         test.showPathOnMap();
         System.out.println("\nTOTAL SHOPPING DISTANCE: " + totalShoppingDistance + " steps.");
