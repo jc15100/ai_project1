@@ -15,7 +15,7 @@ import java.util.Set;
  */
 public class Search {
     public enum NodeType {
-        WALL, FREE, EXPLORED, STEP, ITEM
+        WALL, FREE, EXPLORED, STEP
     }
     
     public static final int DEFAULT_COST = 1;
@@ -157,7 +157,7 @@ public class Search {
         int path_length = 0;
 
         //show init on map
-        store[(int) init.getLocation().getY()][(int) init.getLocation().getX()] = NodeType.STEP;
+        store[(int) from.getY()][(int) from.getX()] = NodeType.STEP;
         while (!goal.equals(init)) {
             //show steps on map
             store[(int) goal.getLocation().getY()][(int) goal.getLocation().getX()] = NodeType.STEP;
@@ -166,34 +166,33 @@ public class Search {
             path_length++;
             
         }
-        
         //System.out.println("Shortest Path Length: " + path_length);
         return path_length;
     }
 
     /*draw the path found on the ASCII map*/
-    private void showPathOnMap() {
+    private char[][] showPathOnMap() {
+        char[][] map = new char[store.length][store.length];
         for (int y = 0; y < store.length; y++) {
             for (int x = 0; x < store.length; x++) {
-                String map = null;
+                
                 switch (store[y][x]) {
                     case WALL:
-                        map = "▓";
+                        map[y][x] = '█';
                         break;
                     case FREE:
-                        map = " ";
+                        map[y][x] = ' ';
                         break;
                     case STEP:
-                        map = "*";
+                        map[y][x] = '▒';
                         break;
                     case EXPLORED:
-                        map = ".";
+                        map[y][x] = '.';
                         break;
                 }
-                System.out.print(map);
             }
-            System.out.println("");
         }
+        return map;
     }
 
     /*perform A* to solve TSP given a list of items and their locations in a store*/
@@ -385,20 +384,22 @@ public class Search {
         File map = new File(args[0]);
         HashMap<String, Point> toShop = new HashMap<String, Point>();
 
-        toShop.put("fg", new Point(28, 3));
+        toShop.put("fg", new Point(28, 6));
         toShop.put("milk", new Point(4, 15));
         toShop.put("hotdogs", new Point(13, 20));
         toShop.put("bread", new Point(16, 22));
         toShop.put("juice", new Point(25, 25));
-        toShop.put("eggs", new Point(25, 2));
+        toShop.put("eggs", new Point(25, 3));
         toShop.put("cereal", new Point(4, 25));
         toShop.put("CHECKOUT", new Point(28, 2));
         toShop.put("ENTRANCE", new Point(1, 1));
-        /*toShop.put("beans", new Point(13, 8));
+        toShop.put("beans", new Point(13, 8));
         toShop.put("icecream", new Point(22, 13));
         toShop.put("rice", new Point(1, 28));
         toShop.put("water", new Point(2, 28));
-        toShop.put("chips", new Point(4, 28));*/
+        toShop.put("chips", new Point(4, 28));
+        toShop.put("ice", new Point(8, 24));
+        toShop.put("choco", new Point(22, 28));
         Set<String> keys = toShop.keySet();
         ArrayList<Edge> edges = new ArrayList<Edge>();
         LinkedList<String> items = new LinkedList<String>();
@@ -417,24 +418,39 @@ public class Search {
             }
         }
         
-        /* for(Edge e: edges){
-         System.out.println(e);
-         }
-         */ 
-        
+        //find TSP order for list of items
         String output = test.A_star().getItem();
         ArrayList<String> order = test.buildSolution(output);
        
         System.out.println("SHOPPING ORDER: ");
         int totalShoppingDistance = 0;
         int step = 0;
+        
+        //find shortest path between items in order given
         for (int i = order.size() - 1; i > 0; i--) {
             System.out.println("\t"+ step++ +"-"+ order.get(i));
             totalShoppingDistance += test.buildSolution(toShop.get(order.get(i)), toShop.get(order.get(i - 1)));
         }
         System.out.println("\t"+ step + "-" + order.get(0));
+        
+        
+        //show items initials in the map
+        char[][]store = test.showPathOnMap();
+        step = 0;
+        for(int i = order.size() -1; i > 0; i--){
+            store[(int)toShop.get(order.get(i)).getY()][(int)toShop.get(order.get(i)).getX()] = order.get(i).charAt(0);
+        }
+        store[(int)toShop.get(order.get(0)).getY()][(int)toShop.get(order.get(0)).getX()] = order.get(0).charAt(0);
+        
+        //print out shopping map with paths and items shown
         System.out.println("\nSHOPPING MAP: ");
-        test.showPathOnMap();
+        for(int i =0; i< store.length; i++){
+            for(int j = 0; j < store.length; j++){
+                System.out.print(store[i][j]);
+            }
+            System.out.println("");
+        }
+        //some stats
         System.out.println("\nTOTAL SHOPPING DISTANCE: " + totalShoppingDistance + " steps.");
         System.out.println("TOTAL ELAPSED TIME: " + (System.currentTimeMillis() - start) + " ms.\n");
     }
