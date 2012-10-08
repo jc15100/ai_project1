@@ -383,23 +383,26 @@ public class Search {
 
         File map = new File(args[0]);
         HashMap<String, Point> toShop = new HashMap<String, Point>();
-
-        toShop.put("fg", new Point(28, 6));
-        toShop.put("milk", new Point(4, 15));
-        toShop.put("hotdogs", new Point(13, 20));
-        toShop.put("bread", new Point(16, 22));
-        toShop.put("juice", new Point(25, 25));
-        toShop.put("eggs", new Point(25, 3));
-        toShop.put("cereal", new Point(4, 25));
-        toShop.put("CHECKOUT", new Point(28, 2));
+        
+        //Case for Complicated cased in Kroger-based map
+        toShop.put("ground beef", new Point(21, 27));
+        toShop.put("milk", new Point(27, 25));
+        toShop.put("hotdogs", new Point(13, 27));
+        toShop.put("bread", new Point(13, 9));
+        toShop.put("juice", new Point(11, 22));
+        toShop.put("eggs", new Point(28, 22));
+        toShop.put("cereal", new Point(14, 20));
+        toShop.put("CHECKOUT", new Point(23, 1));
         toShop.put("ENTRANCE", new Point(1, 1));
-        toShop.put("beans", new Point(13, 8));
-        toShop.put("icecream", new Point(22, 13));
-        toShop.put("rice", new Point(1, 28));
-        toShop.put("water", new Point(2, 28));
-        toShop.put("chips", new Point(4, 28));
-        toShop.put("ice", new Point(8, 24));
-        toShop.put("choco", new Point(22, 28));
+        toShop.put("beans", new Point(11, 9));
+        toShop.put("icecream", new Point(23, 20));
+        toShop.put("rice", new Point(11, 11));
+        toShop.put("chips", new Point(8, 24));
+        toShop.put("ham", new Point(16, 27));
+        toShop.put("salt", new Point(17, 18));
+        toShop.put("tomato", new Point(4, 12));
+        toShop.put("lettuce", new Point(1, 12));
+        toShop.put("onions", new Point(4, 6));
         Set<String> keys = toShop.keySet();
         ArrayList<Edge> edges = new ArrayList<Edge>();
         LinkedList<String> items = new LinkedList<String>();

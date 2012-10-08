@@ -1,0 +1,76 @@
+//Case for Complicated cased in Kroger-based map
+        toShop.put("ground beef", new Point(21, 27));
+        toShop.put("milk", new Point(27, 25));
+        toShop.put("hotdogs", new Point(13, 27));
+        toShop.put("bread", new Point(13, 9));
+        toShop.put("juice", new Point(11, 22));
+        toShop.put("eggs", new Point(28, 22));
+        toShop.put("cereal", new Point(14, 20));
+        toShop.put("CHECKOUT", new Point(23, 1));
+        toShop.put("ENTRANCE", new Point(1, 1));
+        toShop.put("beans", new Point(11, 9));
+        toShop.put("icecream", new Point(23, 20));
+        toShop.put("rice", new Point(11, 11));
+        toShop.put("chips", new Point(8, 24));
+        toShop.put("ham", new Point(16, 27));
+        toShop.put("salt", new Point(17, 18));
+        toShop.put("tomato", new Point(4, 12));
+        toShop.put("lettuce", new Point(1, 12));
+        toShop.put("onions", new Point(4, 6));
+
+
+LEAST ORDER COST: 132
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-onions
+	C-tomato
+	D-lettuce
+	E-beans
+	F-rice
+	G-bread
+	H-cereal
+	I-juice
+	J-salt
+	K-chips
+	L-hotdogs
+	M-ham
+	N-ground beef
+	O-milk
+	P-eggs
+	Q-icecream
+	R-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████
+█A                █ █ █R█    █
+█▒      ▒▒▒▒▒▒         ▒     █
+█▒▒████ ▒█▒▒█▒ █  █  █ ▒█    █
+█ ▒█  █ ▒█▒▒█▒ █  █  █ ▒█    █
+█ ▒▒▒▒▒▒▒█▒▒█▒ █  █  █ ▒█    █
+█  █B▒█▒▒█▒▒█▒ █  █  █ ▒█    █
+█  ████▒▒█▒▒█▒ █  █  █ ▒█  █ █
+█    ▒▒▒▒█▒▒█▒ █  █  █ ▒█  █ █
+█▒▒▒▒▒▒▒▒█▒E█G █  █  █ ▒█  █ █
+█▒▒██▒   █ ▒█▒▒█  █  █ ▒█    █
+█▒▒█ ▒   █ F█ ▒█  █  █ ▒█    █
+█D▒█C▒   █  █ ▒█  █  █ ▒█  █ █
+█  █     █  █ ▒█  █  █ ▒█  █ █
+█  ██    █  █ ▒█  █  █ ▒█  █ █
+█        █  █ ▒█  █  █ ▒█    █
+█        █  █ ▒█  █  █ ▒█    █
+█        █  █ ▒█  █  █ ▒█  █ █
+█        █  █ ▒█▒J█  █ ▒█  █ █
+█        █  █ ▒█▒▒█  █ ▒█  █ █
+█        █  █ H█▒▒█  █ Q█    █
+█        █  █ ▒█▒▒█  █ ▒█    █
+█        █ I█▒▒█▒▒█  █ ▒█   P█
+█   █      ▒▒▒▒▒▒▒     ▒▒▒▒▒▒█
+█  █  █ K▒▒▒▒▒▒▒▒          ▒██
+█ █  █  █   ▒█████████    ▒O██
+█   █  █    ▒█████████   ▒▒ ██
+█     █     ▒L▒▒M▒▒▒▒N▒▒▒▒  ██
+█          ███████████████████
+██████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 182 steps.
+TOTAL ELAPSED TIME: 60 ms.
