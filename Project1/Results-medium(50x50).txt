@@ -193,4 +193,114 @@ SHOPPING MAP:
 TOTAL SHOPPING DISTANCE: 364 steps.
 TOTAL ELAPSED TIME: 307 ms.
 
+#######################################
+###########   RESULTS 3   #############
+#######################################
 
+/* list for store_medium.map */
+        toShop.put("milk", new Point(1, 3));
+        toShop.put("hotdogs", new Point(1, 12));
+        toShop.put("bread", new Point(9, 23));
+        toShop.put("beef", new Point(1, 39));
+        toShop.put("sushi", new Point(28, 42));
+        toShop.put("pizza", new Point(24, 47));
+        toShop.put("CHECKOUT", new Point(43, 11));
+        toShop.put("ENTRANCE", new Point(48, 2));
+        toShop.put("beans", new Point(11, 15));
+        toShop.put("icecream", new Point(2, 20));
+        toShop.put("rice", new Point(14, 20));
+        toShop.put("water", new Point(30, 8));
+        toShop.put("chips", new Point(26, 9));
+        toShop.put("pototoes", new Point(39, 3));
+        toShop.put("strawberries", new Point(44, 3));
+        toShop.put("paper towel", new Point(9, 8));
+        toShop.put("chocolate", new Point(14, 21));
+        toShop.put("apricots", new Point(13, 26));
+        toShop.put("perfume", new Point(27, 17));
+        toShop.put("salmon", new Point(23, 4));
+        toShop.put("flowers", new Point(46, 26));
+        toShop.put("hazelnuts", new Point(28, 28));
+        toShop.put("beer", new Point(25, 32));
+        toShop.put("spatula", new Point(11, 34));
+
+LEAST ORDER COST: 418
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-strawberries
+	C-pototoes
+	D-water
+	E-chips
+	F-salmon
+	G-flowers
+	H-hazelnuts
+	I-beer
+	J-sushi
+	K-pizza
+	L-perfume
+	M-rice
+	N-chocolate
+	O-beans
+	P-apricots
+	Q-bread
+	R-paper towel
+	S-spatula
+	T-hotdogs
+	U-icecream
+	V-milk
+	W-beef
+	X-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████████████████████████
+██████████████████████████████                   █
+█                 ███████████          ▒▒▒▒▒▒   A█
+█V▒                █████████      █  █ C█  █B▒▒▒▒█
+█▒▒ ██████████         F▒▒▒    █  █  █▒▒█  █    ██
+█▒▒                    ▒  ▒           ▒         ██
+█▒▒                ▒▒▒▒▒  ▒▒▒▒▒▒▒▒▒▒▒▒▒        ███
+█▒▒█████████████   ▒██████████████▒▒ █████████████
+█▒▒      R         ▒      ▒▒▒▒D▒▒▒▒▒             █
+█▒▒▒▒▒▒▒▒▒         ▒▒▒▒▒▒▒E       ▒              █
+█▒▒█████████████    ██████████████▒  ███████     █
+█▒▒                               ▒    ▒▒▒▒X     █
+█T▒                               ▒ ▒▒▒▒         █
+█▒▒█████████████    ██████████████▒ ▒███████     █
+█▒▒                               ▒ ▒            █
+█▒▒        O▒▒▒▒▒                 ▒ ▒            █
+█▒▒█████████████▒   ██████████████▒▒▒███████     █
+█▒▒             ▒  ▒▒▒▒▒▒▒▒L      ▒▒             █
+█▒▒             ▒▒▒▒       ▒▒▒▒▒▒▒▒▒             █
+█▒▒█████████████▒   ██████████████▒▒ ███████     █
+█▒U           M▒▒                 ▒              █
+█▒▒           N ▒                 ▒              █
+█▒▒█████████████▒   ██████████████▒  █████████████
+█▒▒▒▒▒▒▒▒Q▒▒▒▒  ▒       ▒▒▒▒▒▒▒▒▒▒▒         ██████
+█▒   ▒       ▒ ▒▒   ▒▒▒▒▒     ▒▒▒▒▒▒▒▒▒▒        ██
+█▒   ▒██   ██▒ ▒██  ▒██   ██  ▒██ ▒ ███▒▒▒▒▒▒▒▒  █
+█▒   ▒██   ██P▒▒██  ▒██   ██  ▒██ ▒ ███    ███G  █
+█▒   ▒██   ██   ██  ▒██   ██▒▒▒██ ▒▒███          █
+█▒   ▒██   ██   ██  ▒██   ██H  ██  ▒███          █
+█▒   ▒██   ██   ██  ▒██   ██▒  ██  ▒███    ███   █
+█▒   ▒██   ██   ██  ▒██   ██▒  ██  ▒███          █
+█▒   ▒          ▒▒▒▒▒       ▒      ▒▒            █
+█▒   ▒▒▒▒▒▒▒▒▒▒▒▒        I▒▒▒▒▒▒▒▒▒▒▒▒▒▒         █
+█▒   ▒█████████████████████████████████▒         █
+█▒   ▒▒▒▒▒▒S            ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒         █
+█▒   ▒                  ▒   ▒▒▒▒▒▒▒▒▒▒▒▒         █
+█▒   ▒        ██     ██ ▒   ▒██████████          █
+█▒   ▒        ██     ██ ▒   ▒██████████          █
+█▒   ▒        ██     ██ ▒   ▒                    █
+█W▒▒▒▒ ██     ██     ██ ▒   ▒                    █
+█      ██               ▒   ▒███████████         █
+█      ██               ▒   ▒███████████         █
+█      ██     ██     ██ ▒   J██       ██         █
+█      ██     ██     ██ ▒▒▒▒▒██       ██         █
+█             ██     ██ ▒    ██       ██         █
+█             ██     ██ ▒    ███████████         █
+██                      ▒                        █
+███                     K                       ██
+██████████████████████████████████████████████████
+██████████████████████████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 516 steps.
+TOTAL ELAPSED TIME: 344 ms.
