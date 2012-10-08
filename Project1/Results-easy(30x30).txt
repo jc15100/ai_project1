@@ -1,0 +1,331 @@
+#######################################
+###########   RESULTS 1   #############
+#######################################
+
+/* list for store_easy.map */
+        toShop.put("milk", new Point(2, 17));
+        toShop.put("hotdogs", new Point(1, 6));
+        toShop.put("bread", new Point(22, 17));
+        toShop.put("juice", new Point(17, 16));
+        toShop.put("eggs", new Point(2, 14));
+        toShop.put("cereal", new Point(16, 20));
+        toShop.put("CHECKOUT", new Point(11, 27));
+        toShop.put("ENTRANCE", new Point(28, 28));
+        toShop.put("beans", new Point(16, 21));
+        toShop.put("icecream", new Point(16, 7));
+        toShop.put("rice", new Point(17, 15));
+        toShop.put("water", new Point(10, 20));
+        toShop.put("chips", new Point(11, 18));
+        toShop.put("pototoes", new Point(21, 4));
+        toShop.put("apples", new Point(21, 9));
+        toShop.put("chicken", new Point(1, 1));
+        toShop
+
+LEAST ORDER COST: 144
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-bread
+	C-juice
+	D-rice
+	E-cereal
+	F-beans
+	G-apples
+	H-pototoes
+	I-icecream
+	J-chips
+	K-water
+	L-milk
+	M-eggs
+	N-hotdogs
+	O-chicken
+	P-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████
+█O                           █
+█▒ █  █  █  █  █    █████    █
+█▒▒█  █  █  █  █             █
+█▒▒█  █  █  █  █▒▒▒▒▒H       █
+█▒▒█  █  █  █  █▒  ▒█████    █
+█N▒█  █  █  █  █▒  ▒         █
+█ ▒█  █  █  █  █I  ▒         █
+█ ▒█  █  █  █  █▒  ▒█████    █
+█ ▒█  █  █  █  █▒ ▒▒▒G       █
+█ ▒▒            ▒ ▒          █
+█ ▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒      █
+█ ▒█  █  █ ▒█  █ ▒█  █▒     ██
+█ ▒█  █  █ ▒█  █ ▒█  █▒     ██
+█ M█  █  █ ▒█  █ ▒█  █▒     ██
+█ ▒█  █  █ ▒█  █ D█  █▒     ██
+█ ▒█  █  █ ▒█  █ C█  █▒      █
+█ L█  █  █ ▒█  █ ▒█  █B  █   █
+█ ▒█  █  █ J█  █▒▒█  █▒  █   █
+█ ▒█  █  █▒▒█  █▒ █  █▒  █   █
+█ ▒█  █  █K▒█  █E █  █▒  █   █
+█ ▒█  █  █▒▒█  █F █  █▒  █   █
+█ ▒▒▒▒█  █▒▒█  █  █  █▒▒▒█   █
+██   ▒█  █▒▒█  █  █  █  ▒    █
+██   ▒▒▒▒▒▒▒            ▒    █
+██         ▒            ▒ ████
+█     █  █ ▒█  █   ████ ▒▒▒▒▒█
+█     █  █ P█  █   █████    ▒█
+█                           A█
+██████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 166 steps.
+TOTAL ELAPSED TIME: 207 ms.
+
+#######################################
+###########   RESULTS 2   #############
+#######################################
+
+ /* list for store_easy.map */
+        toShop.put("hotdogs", new Point(1, 6));
+        toShop.put("bread", new Point(22, 17));
+        toShop.put("eggs", new Point(2, 14));
+        toShop.put("CHECKOUT", new Point(11, 27));
+        toShop.put("ENTRANCE", new Point(28, 28));
+        toShop.put("beans", new Point(16, 21));
+        toShop.put("icecream", new Point(16, 7));
+        toShop.put("rice", new Point(17, 15));
+        toShop.put("water", new Point(10, 20));
+        toShop.put("pototoes", new Point(21, 4));
+        toShop.put("apples", new Point(21, 9));
+        toShop.put("chicken", new Point(1, 1));
+
+LEAST ORDER COST: 132
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-bread
+	C-rice
+	D-apples
+	E-pototoes
+	F-icecream
+	G-beans
+	H-water
+	I-hotdogs
+	J-chicken
+	K-eggs
+	L-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████
+█J                           █
+█▒▒█  █  █  █  █    █████    █
+█▒▒█  █  █  █  █             █
+█▒▒█  █  █  █  █▒▒▒▒▒E       █
+█▒▒█  █  █  █  █▒  ▒█████    █
+█I▒█  █  █  █  █▒  ▒         █
+█ ▒█  █  █  █  █F  ▒         █
+█ ▒█  █  █  █  █▒  ▒█████    █
+█ ▒█  █  █  █  █▒ ▒▒▒D       █
+█ ▒▒▒▒▒▒▒▒▒     ▒ ▒          █
+█ ▒       ▒     ▒▒▒▒▒▒▒      █
+█ ▒█  █  █▒ █  █▒▒█  █▒     ██
+█ ▒█  █  █▒ █  █▒▒█  █▒     ██
+█ K█  █  █▒ █  █▒▒█  █▒     ██
+█ ▒█  █  █▒ █  █▒C█  █▒     ██
+█ ▒█  █  █▒ █  █▒ █  █▒      █
+█ ▒█  █  █▒ █  █▒ █  █B  █   █
+█ ▒█  █  █▒ █  █▒ █  █▒  █   █
+█ ▒█  █  █▒ █  █▒ █  █▒  █   █
+█ ▒█  █  █H▒█  █▒ █  █▒  █   █
+█ ▒█  █  █ ▒█  █G █  █▒  █   █
+█ ▒▒▒▒█  █ ▒█  █▒ █  █▒▒▒█   █
+██   ▒█  █ ▒█  █▒ █  █  ▒    █
+██   ▒▒▒▒▒▒▒▒▒▒▒▒       ▒    █
+██         ▒            ▒ ████
+█     █  █ ▒█  █   ████ ▒▒▒▒▒█
+█     █  █ L█  █   █████    ▒█
+█                           A█
+██████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 150 steps.
+TOTAL ELAPSED TIME: 172 ms.
+
+#######################################
+###########   RESULTS 3   #############
+#######################################
+
+/* list for store_easy.map */
+        toShop.put("bread", new Point(22, 17));
+        toShop.put("eggs", new Point(2, 14));
+        toShop.put("CHECKOUT", new Point(11, 27));
+        toShop.put("ENTRANCE", new Point(28, 28));
+        toShop.put("beans", new Point(16, 21));
+        toShop.put("icecream", new Point(16, 7));
+        toShop.put("rice", new Point(17, 15));
+        toShop.put("water", new Point(10, 20));
+        toShop.put("pototoes", new Point(21, 4));
+        toShop.put("apples", new Point(21, 9));
+
+LEAST ORDER COST: 104
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-bread
+	C-rice
+	D-apples
+	E-pototoes
+	F-icecream
+	G-beans
+	H-water
+	I-eggs
+	J-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████
+█                            █
+█  █  █  █  █  █    █████    █
+█  █  █  █  █  █             █
+█  █  █  █  █  █▒▒▒▒▒E       █
+█  █  █  █  █  █▒  ▒█████    █
+█  █  █  █  █  █▒  ▒         █
+█  █  █  █  █  █F  ▒         █
+█  █  █  █  █  █▒  ▒█████    █
+█  █  █  █  █  █▒ ▒▒▒D       █
+█               ▒ ▒          █
+█ ▒▒▒▒▒▒▒▒▒     ▒▒▒▒▒▒▒      █
+█ ▒█  █  █▒ █  █▒▒█  █▒     ██
+█ ▒█  █  █▒ █  █▒▒█  █▒     ██
+█ I█  █  █▒ █  █▒▒█  █▒     ██
+█ ▒█  █  █▒ █  █▒C█  █▒     ██
+█ ▒█  █  █▒ █  █▒ █  █▒      █
+█ ▒█  █  █▒ █  █▒ █  █B  █   █
+█ ▒█  █  █▒ █  █▒ █  █▒  █   █
+█ ▒█  █  █▒ █  █▒ █  █▒  █   █
+█ ▒█  █  █H▒█  █▒ █  █▒  █   █
+█ ▒█  █  █ ▒█  █G █  █▒  █   █
+█ ▒▒▒▒█  █ ▒█  █▒ █  █▒▒▒█   █
+██   ▒█  █ ▒█  █▒ █  █  ▒    █
+██   ▒▒▒▒▒▒▒▒▒▒▒▒       ▒    █
+██         ▒            ▒ ████
+█     █  █ ▒█  █   ████ ▒▒▒▒▒█
+█     █  █ J█  █   █████    ▒█
+█                           A█
+██████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 128 steps.
+TOTAL ELAPSED TIME: 130 ms.
+
+#######################################
+###########   RESULTS 4   #############
+#######################################
+
+/* list for store_easy.map */
+        toShop.put("bread", new Point(22, 17));
+        toShop.put("eggs", new Point(2, 14));
+        toShop.put("CHECKOUT", new Point(11, 27));
+        toShop.put("ENTRANCE", new Point(28, 28));
+        toShop.put("beans", new Point(16, 21));
+        toShop.put("icecream", new Point(16, 7));
+        toShop.put("water", new Point(10, 20));
+        toShop.put("pototoes", new Point(21, 4));
+        toShop.put("apples", new Point(21, 9));
+
+LEAST ORDER COST: 96
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-bread
+	C-apples
+	D-pototoes
+	E-icecream
+	F-beans
+	G-water
+	H-eggs
+	I-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████
+█                            █
+█  █  █  █  █  █    █████    █
+█  █  █  █  █  █             █
+█  █  █  █  █  █▒▒▒▒▒D       █
+█  █  █  █  █  █▒  ▒█████    █
+█  █  █  █  █  █▒  ▒         █
+█  █  █  █  █  █E  ▒         █
+█  █  █  █  █  █▒  ▒█████    █
+█  █  █  █  █  █▒  ▒▒C       █
+█               ▒    ▒       █
+█ ▒▒▒▒▒▒▒▒▒     ▒    ▒▒      █
+█ ▒█  █  █▒ █  █▒ █  █▒     ██
+█ ▒█  █  █▒ █  █▒ █  █▒     ██
+█ H█  █  █▒ █  █▒ █  █▒     ██
+█ ▒█  █  █▒ █  █▒ █  █▒     ██
+█ ▒█  █  █▒ █  █▒ █  █▒      █
+█ ▒█  █  █▒ █  █▒ █  █B  █   █
+█ ▒█  █  █▒ █  █▒ █  █▒  █   █
+█ ▒█  █  █▒ █  █▒ █  █▒  █   █
+█ ▒█  █  █G▒█  █▒ █  █▒  █   █
+█ ▒█  █  █ ▒█  █F █  █▒  █   █
+█ ▒▒▒▒█  █ ▒█  █▒ █  █▒▒▒█   █
+██   ▒█  █ ▒█  █▒ █  █  ▒    █
+██   ▒▒▒▒▒▒▒▒▒▒▒▒       ▒    █
+██         ▒            ▒ ████
+█     █  █ ▒█  █   ████ ▒▒▒▒▒█
+█     █  █ I█  █   █████    ▒█
+█                           A█
+██████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 112 steps.
+TOTAL ELAPSED TIME: 111 ms.
+
+#######################################
+###########   RESULTS 5   #############
+#######################################
+
+/* list for store_easy.map */
+        toShop.put("bread", new Point(22, 17));
+        toShop.put("CHECKOUT", new Point(11, 27));
+        toShop.put("ENTRANCE", new Point(28, 28));
+        toShop.put("beans", new Point(16, 21));
+        toShop.put("icecream", new Point(16, 7));
+        toShop.put("water", new Point(10, 20));
+        toShop.put("pototoes", new Point(21, 4));
+        toShop.put("apples", new Point(21, 9));
+
+LEAST ORDER COST: 68
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-bread
+	C-apples
+	D-pototoes
+	E-icecream
+	F-beans
+	G-water
+	H-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████
+█                            █
+█  █  █  █  █  █    █████    █
+█  █  █  █  █  █             █
+█  █  █  █  █  █▒▒▒▒▒D       █
+█  █  █  █  █  █▒  ▒█████    █
+█  █  █  █  █  █▒  ▒         █
+█  █  █  █  █  █E  ▒         █
+█  █  █  █  █  █▒  ▒█████    █
+█  █  █  █  █  █▒  ▒▒C       █
+█               ▒    ▒       █
+█               ▒    ▒▒      █
+█  █  █  █  █  █▒ █  █▒     ██
+█  █  █  █  █  █▒ █  █▒     ██
+█  █  █  █  █  █▒ █  █▒     ██
+█  █  █  █  █  █▒ █  █▒     ██
+█  █  █  █  █  █▒ █  █▒      █
+█  █  █  █  █  █▒ █  █B  █   █
+█  █  █  █  █  █▒ █  █▒  █   █
+█  █  █  █  █  █▒ █  █▒  █   █
+█  █  █  █G▒█  █▒ █  █▒  █   █
+█  █  █  █ ▒█  █F █  █▒  █   █
+█     █  █ ▒█  █▒ █  █▒▒▒█   █
+██    █  █ ▒█  █▒ █  █  ▒    █
+██         ▒▒▒▒▒▒       ▒    █
+██         ▒            ▒ ████
+█     █  █ ▒█  █   ████ ▒▒▒▒▒█
+█     █  █ H█  █   █████    ▒█
+█                           A█
+██████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 78 steps.
+TOTAL ELAPSED TIME: 106 ms.
+
