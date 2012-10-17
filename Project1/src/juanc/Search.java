@@ -277,9 +277,9 @@ public class Search {
     }
 
     /*find total cost for a current item given itself and its parent*/
-    private int findTotalCost(GraphState s, GraphState c) {
+    private int findTotalCost(GraphState current, GraphState parent) {
         /*         g(n)      +         d_n(n)          +         MST(n)     +     dc_n(n) */
-        return s.getGCost() + this.findNearestItem(c) + this.getMSTCost(c) + this.findNearestToCheckOut(s);
+        return current.getGCost() + this.findNearestItem(parent) + this.getMSTCost(current) + this.findNearestToCheckOut(current);
     }
 
     /*gives MST Cost for remaining nodes not including current one*/
@@ -384,7 +384,7 @@ public class Search {
         File map = new File(args[0]);
         HashMap<String, Point> toShop = new HashMap<String, Point>();
         
-        //Case for Complicated cased in Kroger-based map
+        /*Case for Complicated cased in Kroger-based map
         toShop.put("ground beef", new Point(21, 27));
         toShop.put("milk", new Point(27, 25));
         toShop.put("hotdogs", new Point(13, 27));
@@ -403,9 +403,107 @@ public class Search {
         toShop.put("tomato", new Point(4, 12));
         toShop.put("lettuce", new Point(1, 12));
         toShop.put("onions", new Point(4, 6));
+            /*
+        toShop.put("hotdogs", new Point(1,1));
+        toShop.put("milk", new Point(28, 1));
+        toShop.put("ham", new Point(1, 28));
+        toShop.put("juice", new Point(15, 28));
+        toShop.put("orange", new Point(20, 15));
+        toShop.put("CHECKOUT", new Point(14, 27));
+        toShop.put("ENTRANCE", new Point(28, 28));
+
+        /*40 Random Assignments
+        toShop.put("bread", new Point(22, 17));
+        toShop.put("CHECKOUT", new Point(43, 11));
+        toShop.put("ENTRANCE", new Point(48, 2));
+        toShop.put("beans", new Point(11, 9));
+        toShop.put("icecream", new Point(5, 8));
+        toShop.put("water", new Point(2, 5));
+        toShop.put("pototoes", new Point(1, 35));
+        toShop.put("apples", new Point(35, 35));
+        toShop.put("CHECKOUT", new Point(110, 54));
+        toShop.put("ENTRANCE", new Point(236, 110));
+        toShop.put("c", new Point(153,151));
+        toShop.put("d", new Point(227, 49));
+        toShop.put("e", new Point(307, 176));
+        toShop.put("f", new Point(220, 211));
+        toShop.put("g", new Point(341, 90));
+        toShop.put("h", new Point(149, 91));
+        toShop.put("i", new Point(335, 40));
+        toShop.put("j", new Point(371, 150));
+        toShop.put("k", new Point(218, 161));
+        toShop.put("l", new Point(334, 239));
+        toShop.put("m", new Point(148, 227));
+        toShop.put("n", new Point(49, 128));
+        toShop.put("o", new Point(25, 24));
+        toShop.put("p", new Point(25, 46));
+        toShop.put("q", new Point(14, 25));
+        toShop.put("r", new Point(28, 40));
+        toShop.put("s", new Point(20, 25));
+        toShop.put("t", new Point(20, 20));
+        toShop.put("u", new Point(25, 35));
+        toShop.put("v", new Point(48, 35));
+        toShop.put("w", new Point(40, 47));
+        toShop.put("x", new Point(14, 4));
+        toShop.put("y", new Point(28, 24));
+        toShop.put("z", new Point(23, 28));
+        toShop.put("1", new Point(8, 25));
+        toShop.put("2", new Point(45, 45));
+        toShop.put("3", new Point(42, 35));
+        toShop.put("4", new Point(15, 28));
+        toShop.put("5", new Point(18, 47));
+        toShop.put("6", new Point(5, 20));
+        toShop.put("7", new Point(8, 20));
+        toShop.put("8", new Point(15, 15));
+        toShop.put("9", new Point(8, 15));
+        toShop.put("@", new Point(48, 13));*/
+        
+        /*15 cities case for TIME COMPARISON*/
+        toShop.put("CHECKOUT", new Point(110, 54));
+        toShop.put("ENTRANCE", new Point(236, 110));
+        toShop.put("c", new Point(153,151));
+        toShop.put("d", new Point(227, 49));
+        toShop.put("e", new Point(307, 176));
+        toShop.put("f", new Point(220, 211));
+        toShop.put("g", new Point(341, 90));
+        toShop.put("h", new Point(149, 91));
+        toShop.put("i", new Point(335, 40));
+        toShop.put("j", new Point(371, 150));
+        toShop.put("k", new Point(218, 161));
+        toShop.put("l", new Point(334, 239));
+        toShop.put("m", new Point(148, 227));
+        toShop.put("n", new Point(49, 128));
+        
+        
+        
         Set<String> keys = toShop.keySet();
         ArrayList<Edge> edges = new ArrayList<Edge>();
         LinkedList<String> items = new LinkedList<String>();
+        
+        /*Comparing paper case*/
+        /*edges.add(new Edge("ENTRANCE", "C", 5));
+        edges.add(new Edge("A", "ENTRANCE", 8));
+        edges.add(new Edge("A", "B", 2));
+        edges.add(new Edge("A", "C", 7));
+        edges.add(new Edge("A", "CHECKOUT", 10));
+        edges.add(new Edge("B", "ENTRANCE", 8));
+        edges.add(new Edge("B", "A", 2));
+        edges.add(new Edge("B", "C", 5));
+        edges.add(new Edge("B", "CHECKOUT", 8));
+        edges.add(new Edge("C", "ENTRANCE", 5));
+        edges.add(new Edge("C", "A", 7));
+        edges.add(new Edge("C", "B", 5));
+        edges.add(new Edge("C", "CHECKOUT", 5));
+        edges.add(new Edge("CHECKOUT", "A", 10));
+        edges.add(new Edge("CHECKOUT", "B", 8));
+        edges.add(new Edge("CHECKOUT", "C", 5));
+
+        items.add("ENTRANCE");
+        items.add("A");
+        items.add("B");
+        items.add("C");
+        items.add("CHECKOUT");*/
+
         
         Search test = new Search(map, edges, items);
         
@@ -432,14 +530,14 @@ public class Search {
         //find shortest path between items in order given
         for (int i = order.size() - 1; i > 0; i--) {
             System.out.println("\t"+ step++ +"-"+ order.get(i));
-            totalShoppingDistance += test.buildSolution(toShop.get(order.get(i)), toShop.get(order.get(i - 1)));
+           // totalShoppingDistance += test.buildSolution(toShop.get(order.get(i)), toShop.get(order.get(i - 1)));
         }
         System.out.println("\t"+ step + "-" + order.get(0));
-        
+        /*
         //time keeping ends after finding path between each pair
         long end = System.currentTimeMillis();
         
-        /*PRINT OUTPUTS*/
+        /*PRINT OUTPUTS
         //show items initials in the map
         char[][]store = test.showPathOnMap();
         step = 'A';
@@ -458,6 +556,6 @@ public class Search {
         }
         //some stats
         System.out.println("\nTOTAL SHOPPING DISTANCE: " + totalShoppingDistance + " steps.");
-        System.out.println("TOTAL ELAPSED TIME: " + (end - start) + " ms.\n");
+        System.out.println("TOTAL ELAPSED TIME: " + (end - start) + " ms.\n");*/
     }
 }
