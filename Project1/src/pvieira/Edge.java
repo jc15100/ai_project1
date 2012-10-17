@@ -1,17 +1,17 @@
 package pvieira;
 
 /*
-NAME: Juan C. Garcia
-CERTIFICATION: I certify that this work is my own and that
-               none of it is the work of any other person.
+ * @author Juan C Garcia, Peter Vieira
 */
 public class Edge implements Comparable
 {
     private String from;
     private String to; 
-    private int cost;
+//    private int cost;
+    private double cost;
     
-    public Edge(String f, String t, int c)
+//    public Edge(String f, String t, int c)
+    public Edge(String f, String t, double c)
     {
         from = f;
         to = t;
@@ -26,7 +26,8 @@ public class Edge implements Comparable
     {
         return to;
     }
-    public int cost()
+//    public int cost()
+    public double cost()
     {
         return cost;
     }
@@ -39,7 +40,8 @@ public class Edge implements Comparable
     public int compareTo(Object o) 
     {
         Edge other = (Edge) o;
-        return cost() - other.cost();
+ //       return cost() - other.cost();
+        return (int)(cost() - other.cost());
     }
 
 }//End of Edge class

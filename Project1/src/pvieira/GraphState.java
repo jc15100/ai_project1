@@ -1,15 +1,18 @@
 package pvieira;
 
 /**
- * @author jc15100
+ * @author Juan C Garcia, Peter Vieira
  */
 public class GraphState implements Comparable<GraphState>{
    
-    private int cost;
-    private int gcost;
+//    private int cost;
+//    private int gcost;
+	private double cost;
+	private double gcost;
     private String item;
     
-    public GraphState(int c, int g, String s){
+//    public GraphState(int c, int g, String s){
+    public GraphState(double c, double g, String s){
         cost = c;
         item = s;
         gcost= g;
@@ -37,19 +40,23 @@ public class GraphState implements Comparable<GraphState>{
         return true;
     }
 
-    public int getCost() {
-        return cost;
+//    public int getCost() {
+    public double getCost(){
+    	return cost;
     }
 
-    public void setCost(int cost) {
+//    public void setCost(int cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
     
-    public int getGCost(){
+//    public int getGCost(){
+    public double getGCost(){
         return gcost;
     }
     
-    public void setGCost(int g){
+//    public void setGCost(int g){
+    public void setGCost(double g){
         this.gcost = g;
     }
     

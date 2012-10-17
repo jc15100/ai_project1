@@ -1,6 +1,7 @@
 package pvieira;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,7 +12,7 @@ import java.util.LinkedList;
 import java.util.Set;
 
 /**
- * @author jc15100
+ * @author Juan C Garcia, Peter Vieira
  */
 public class Search {
     public enum NodeType {
@@ -25,8 +26,10 @@ public class Search {
     public static final double P = 1 / 50;
     public static final State NO_PATH = null;
     public static final GraphState NO_ORDER = null;
-    public static final String START = "ENTRANCE";
-    public static final String END = "CHECKOUT";
+//    public static final String START = "ENTRANCE";
+//    public static final String END = "CHECKOUT";
+    public static final String START = "EN";
+    public static final String END = "CH";
     
     private HashMap<State, State> path = new HashMap<State, State>();
     private HashMap<String, String> order = new HashMap<String, String>();
@@ -74,7 +77,7 @@ public class Search {
     }
 
     /*perform A* search given a start(x0, y0) and a goal(x1,y1)*/
-    public State A_star(int x0, int y0, int x1, int y1) {
+/*    public State A_star(int x0, int y0, int x1, int y1) {
         ArrayList<State> frontier = new ArrayList<State>();
         Set<State> explored = new HashSet<State>();
 
@@ -127,14 +130,14 @@ public class Search {
         }
         return NO_PATH;
     }
-
+*/
     /*calculate the total cost for a state given a goal; includes heuristic*/
-    public double findTotalCost(State s, Point goal) {
+/*  public double findTotalCost(State s, Point goal) {
         return (s.getCost() + h_function(s.getLocation(), goal.getLocation(), MANHATTAN));
     }
 
     /*given a list of states, remove state with least total cost to goal*/
-    private State removeLeastCost(ArrayList<State> f, Point goal) {
+/*    private State removeLeastCost(ArrayList<State> f, Point goal) {
         State min = null;
         for (State s : f) {
             //heuristic guides search of min cost
@@ -145,12 +148,14 @@ public class Search {
         f.remove(min);
         return min;
     }
-
+*/
     /*after A* finds a goal, connects explored states to build path*/
-    public int buildSolution(Point from, Point to) {
-        State init = new State(1, (int) from.getY(), (int) from.getX());
-        /*track time elapsed to find solution*/
-        long start = System.currentTimeMillis();
+//    public int buildSolution(Point from, Point to) {
+/*    public double buildSolution(Point2D from, Point2D to) {
+//        State init = new State(1, (int) from.getY(), (int) from.getX());
+    	State init = new State(1, from.getY(), from.getX())
+    	/*track time elapsed to find solution*/
+/*        long start = System.currentTimeMillis();
         State goal = this.A_star((int) from.getX(), (int) from.getY(), (int) to.getX(), (int) to.getY());
         //System.out.println("Elapsed A* Search Time: " + (System.currentTimeMillis() - start));
 
@@ -168,7 +173,7 @@ public class Search {
         }
         //System.out.println("Shortest Path Length: " + path_length);
         return path_length;
-    }
+	}*/
 
     /*draw the path found on the ASCII map*/
     private char[][] showPathOnMap() {
@@ -277,7 +282,8 @@ public class Search {
     }
 
     /*find total cost for a current item given itself and its parent*/
-    private int findTotalCost(GraphState s, GraphState c) {
+//    private int findTotalCost(GraphState s, GraphState c) {
+    private double findTotalCost(GraphState s, GraphState c) {
         /*         g(n)      +         d_n(n)          +         MST(n)     +     dc_n(n) */
         return s.getGCost() + this.findNearestItem(c) + this.getMSTCost(c) + this.findNearestToCheckOut(s);
     }
@@ -307,8 +313,10 @@ public class Search {
     }
 
     /*gives d_n(n): distance to nearest item from current one*/
-    private int findNearestItem(GraphState s) {
-        int min = 0;
+//    private int findNearestItem(GraphState s) {
+//        int min = 0;
+    private double findNearestItem(GraphState s) {
+    	double min = 0;
         for (Edge e : edges) {
             if (e.from().equals(s.getItem())) {
                 if (min == 0 || e.cost() < min) {
@@ -320,8 +328,10 @@ public class Search {
     }
 
     /*gives dc_n(n): distance to checkout item nearest to it not including current one*/
-    private int findNearestToCheckOut(GraphState s) {
-        int min = 0;
+//    private int findNearestToCheckOut(GraphState s) {
+    private double findNearestToCheckOut(GraphState s) {
+//    int min = 0;
+    	double min = 0;
         for (Edge e : edges) {
             if (e.to().equals(END)) {
                 if (!e.from().equals(s.getItem())) {
@@ -338,13 +348,13 @@ public class Search {
     public ArrayList<String> buildSolution(String goal) {
         ArrayList<String> ordered = new ArrayList<String>();
         
-        int leastOrderCost = 0;
+        double leastOrderCost = 0;
         
         //System.out.println(goal);
         while (!goal.equals(START)) {
             ordered.add(goal);
             leastOrderCost += this.findEdgeCost(goal, order.get(goal));
- 
+            System.out.println(goal + "-" + order.get(goal) + ": " + this.findEdgeCost(goal, order.get(goal)));
             goal = order.get(goal);
             //System.out.println(goal);
         }
@@ -354,8 +364,9 @@ public class Search {
     }
 
     /*calculate heuristic for 2 points; scales heuristic to break ties*/
-    public double h_function(Point p1, Point p2, int type) {
-        if (type == EUCLIDEAN) {
+//    public double h_function(Point p1, Point p2, int type) {
+    public double h_function(Point2D p1, Point2D p2, int type) {
+    if (type == EUCLIDEAN) {
             return Math.sqrt(Math.pow(p2.getX() - p1.getX(), 2) + Math.pow(p2.getY() - p1.getY(), 2));
         } else {//return MANHATTAN distance
             double h = Math.abs(p1.getX() - p2.getX()) + Math.abs(p1.getY() - p2.getY());
@@ -364,7 +375,8 @@ public class Search {
     }
 
     /*find cost of edges for least order cost calculation*/
-    private int findEdgeCost(String from, String to){
+//    private int findEdgeCost(String from, String to){
+    private double findEdgeCost(String from, String to){
         for(Edge e: cpy_edges){
             if(e.from().equals(from) && e.to().equals(to)){
                 return e.cost();
@@ -382,9 +394,10 @@ public class Search {
         }
 
         File map = new File(args[0]);
-        HashMap<String, Point> toShop = new HashMap<String, Point>();
-        
-        //Case for Complicated cased in Kroger-based map
+//        HashMap<String, Point> toShop = new HashMap<String, Point>();
+        HashMap<String, Point2D> toShop = new HashMap<String, Point2D>();
+        //Case for complicated case in Kroger-based map "store_kroger.map"
+        //Must change program argument to "store_kroger.map"
         /*toShop.put("ground beef", new Point(21, 27));
         toShop.put("milk", new Point(27, 25));
         toShop.put("hotdogs", new Point(13, 27));
@@ -403,6 +416,9 @@ public class Search {
         toShop.put("tomato", new Point(4, 12));
         toShop.put("lettuce", new Point(1, 12));
         toShop.put("onions", new Point(4, 6));*/
+        
+/*        //Case for "store_medium.map" map file
+        //Must change program argument to "store_medium.map"
         toShop.put("milk", new Point(1, 3));
         toShop.put("hotdogs", new Point(1, 12));
         toShop.put("bread", new Point(9, 23));
@@ -418,62 +434,96 @@ public class Search {
         toShop.put("chips", new Point(26, 9));
         toShop.put("pototoes", new Point(39, 3));
         toShop.put("strawberries", new Point(44, 3));
+ */
         
+      
+       
         Set<String> keys = toShop.keySet();
         ArrayList<Edge> edges = new ArrayList<Edge>();
         LinkedList<String> items = new LinkedList<String>();
         
-        Search test = new Search(map, edges, items);
+        edges.add(new Edge("EN", "A", 8.31));
+        edges.add(new Edge("EN", "B", 8.06));
+        edges.add(new Edge("EN", "C", 4.91));
+        edges.add(new Edge("A", "EN", 8.31));
+        edges.add(new Edge("A", "B", 1.59));
+        edges.add(new Edge("A", "C", 6.55));
+        edges.add(new Edge("A", "CH", 9.72));
+        edges.add(new Edge("B", "EN", 8.06));
+        edges.add(new Edge("B", "A", 1.59));
+        edges.add(new Edge("B", "C", 5.41));
+        edges.add(new Edge("B", "CH", 8.16));
+        edges.add(new Edge("C", "EN", 4.91));
+        edges.add(new Edge("C", "A", 6.55));
+        edges.add(new Edge("C", "B", 5.41));
+        edges.add(new Edge("C", "CH", 5.28));
+        edges.add(new Edge("CH", "A", 9.72));
+        edges.add(new Edge("CH", "B", 8.16));
+        edges.add(new Edge("CH", "C", 5.28));
         
-        for (String from : keys) {
+        items.add("EN");
+        items.add("A");
+        items.add("B");
+        items.add("C");
+        items.add("CH");
+        
+        Search test = new Search(map, edges, items);
+		System.out.println("DISTANCES:");
+ /*       for (String from : keys) {
             //populate items LinkedList for MST
             items.add(from);
             for (String to : keys) {
                 //create edges from every item to every other item in the list
-                if (!from.equals(to) && !(from.equals("ENTRANCE") && (to.equals("CHECKOUT")))
-                        && !(from.equals("CHECKOUT") && (to.equals("ENTRANCE")))) {
-                    edges.add(new Edge(from, to, (int) test.h_function(toShop.get(from), toShop.get(to), MANHATTAN)));
-                }
-            }
-        }
+ //               if (!from.equals(to) && !(from.equals("ENTRANCE") && (to.equals("CHECKOUT")))
+ //                       && !(from.equals("CHECKOUT") && (to.equals("ENTRANCE")))) {
+            	if (!from.equals(to) && !(from.equals("EN") && (to.equals("CH")))
+            		&& !(from.equals("CH") && (to.equals("EN")))) {
+ //                   edges.add(new Edge(from, to, (int) test.h_function(toShop.get(from), toShop.get(to), MANHATTAN)));
+            		edges.add(new Edge(from, to, test.h_function(toShop.get(from), toShop.get(to), MANHATTAN)));
+            		System.out.print("\t" + from + "-" + to + "\t");
+            		System.out.print(test.h_function(toShop.get(from), toShop.get(to), EUCLIDEAN) + "\n");
+            	}
+            }*/
+   //     }
         
         //find TSP order for list of items
         String output = test.A_star().getItem();
         ArrayList<String> order = test.buildSolution(output);
        
         System.out.println("SHOPPING ORDER: ");
-        int totalShoppingDistance = 0;
+//        int totalShoppingDistance = 0;
+        double totalShoppingDistance = 0.0;
 
         char step = 'A';
         //find shortest path between items in order given
         for (int i = order.size() - 1; i > 0; i--) {
             System.out.println("\t"+ step++ +"-"+ order.get(i));
-            totalShoppingDistance += test.buildSolution(toShop.get(order.get(i)), toShop.get(order.get(i - 1)));
+//            totalShoppingDistance += test.buildSolution(toShop.get(order.get(i)), toShop.get(order.get(i - 1)));
         }
         System.out.println("\t"+ step + "-" + order.get(0));
         
         //time keeping ends after finding path between each pair
-        long end = System.currentTimeMillis();
+//        long end = System.currentTimeMillis();
         
         /*PRINT OUTPUTS*/
         //show items initials in the map
-        char[][]store = test.showPathOnMap();
-        step = 'A';
-        for(int i = order.size() -1; i > 0; i--){
-            store[(int)toShop.get(order.get(i)).getY()][(int)toShop.get(order.get(i)).getX()] = step++;
-        }
-        store[(int)toShop.get(order.get(0)).getY()][(int)toShop.get(order.get(0)).getX()] = step++;
+//        char[][]store = test.showPathOnMap();
+//        step = 'A';
+//        for(int i = order.size() -1; i > 0; i--){
+//            store[(int)toShop.get(order.get(i)).getY()][(int)toShop.get(order.get(i)).getX()] = step++;
+//        }
+//        store[(int)toShop.get(order.get(0)).getY()][(int)toShop.get(order.get(0)).getX()] = step++;
         
         //print out shopping map with paths and items shown
-        System.out.println("\nSHOPPING MAP: ");
-        for(int i =0; i< store.length; i++){
-            for(int j = 0; j < store.length; j++){
-                System.out.print(store[i][j]);
-            }
-            System.out.println("");
-        }
+//        System.out.println("\nSHOPPING MAP: ");
+//        for(int i =0; i< store.length; i++){
+//            for(int j = 0; j < store.length; j++){
+//                System.out.print(store[i][j]);
+//            }
+//            System.out.println("");
+//        }
         //some stats
-        System.out.println("\nTOTAL SHOPPING DISTANCE: " + totalShoppingDistance + " steps.");
-        System.out.println("TOTAL ELAPSED TIME: " + (end - start) + " ms.\n");
+//        System.out.println("\nTOTAL SHOPPING DISTANCE: " + totalShoppingDistance + " steps.");
+//        System.out.println("TOTAL ELAPSED TIME: " + (end - start) + " ms.\n");
     }
 }

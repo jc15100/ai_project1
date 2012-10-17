@@ -2,8 +2,7 @@ package pvieira;
 
 /*
 NAME: Juan C. Garcia
-CERTIFICATION: I certify that this work is my own and that
-               none of it is the work of any other person.
+
 */
 public class DisjointSet 
 {

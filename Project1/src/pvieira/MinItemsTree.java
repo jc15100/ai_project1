@@ -33,57 +33,7 @@ public class MinItemsTree
         edges = e;
         items = i;
     }
-    
-//    public MinCitiesTree(String fName)
-//    {
-//        edges = new ArrayList<Edge>();
-//        cities = new LinkedList<String>();
-//        try
-//        {
-//            File graph = new File(fName);
-//            Scanner sc = new Scanner(graph);
-//            
-//            int counter = 0;
-//            String currentCity = null;
-//            
-//            while(sc.hasNextLine())
-//            {
-//                String line = sc.nextLine();
-//                /*Skips comments*/
-//                if(line.startsWith("*"))
-//                    continue;
-//                /*If line starts with a letter, it is city info.
-//                  The proper city info is added first into a list
-//                  and the counter is set to 0 (To facilitate search
-//                  in reversed ordered numbers)*/    
-//                if(Character.isLetter(line.charAt(0)))
-//                {
-//                    counter = 0;
-//                    currentCity = getCleanCityInfo(line);
-//                    cities.addFirst(currentCity);
-//                }
-//                /*Otherwise, the line is mileage info.*/
-//                else
-//                {
-//                    Scanner sc2 = new Scanner(line);
-//                    while(sc2.hasNextInt())
-//                    {
-//                        /*Counter is increased to find corresponding city in list*/
-//                        counter++;
-//                        edges.add(new Edge(cities.get(counter), currentCity, sc2.nextInt()));
-//                    }
-//                }
-//            }
-//        }
-//        catch(FileNotFoundException file)
-//        {
-//            System.out.println("File was not found.");
-//        }
-//        catch (IOException exception)
-//        {
-//            exception.printStackTrace();
-//        }
-//    }
+
     /*Obtains the Minimum Spanning Tree via Kruskal's algorithm*/
     public List<Edge> minSpanTree()
     {
@@ -135,14 +85,4 @@ public class MinItemsTree
         }
         return totalCost;
     }
-    
-    /*Gets the city and state name only*/
-    private String getCleanCityInfo(String cityInfo)
-    {
-        int index = 0;
-        while(cityInfo.charAt(index) != new Character('['))
-            index++;
-        
-        return cityInfo.substring(0, index);  
-    }
-}//End of MinCitiesTree
+}

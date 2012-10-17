@@ -1,20 +1,25 @@
 package pvieira;
 
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author jc15100
+ * @author Juan C Garcia, Peter Vieira
  */
 public class State implements Comparable<State>{
-    private int cost;
-    private Point loc;
+//    private int cost;
+//    private Point loc;
+	private double cost;
+    private Point2D loc;
     private String item;
     
-    public State(int c, int ro, int co){
+//    public State(int c, int ro, int co){
+    public State(double c, double ro, double co){
         cost = c;
-        loc = new Point(co, ro);
+//        loc = new Point(co, ro);
+        loc = new Point2D.Double(co, ro);
     }
     
     public State( int c, String i){
@@ -22,7 +27,8 @@ public class State implements Comparable<State>{
         item = i;
     }
 
-    public int getCost() {
+//    public int getCost() {
+    public double getCost() {
         return cost;
     }
     
@@ -36,7 +42,8 @@ public class State implements Comparable<State>{
     
     @Override
     public int compareTo (State other){
-        int otherCost = other.getCost();
+//        int otherCost = other.getCost();
+    	double otherCost = other.getCost();
         
         return cost < otherCost ? -1: cost > otherCost ? 1 : 0;
     }
@@ -67,10 +74,12 @@ public class State implements Comparable<State>{
         return "X: "+ (int)loc.getX() + " Y: " + (int)loc.getY() + " Cost: " + cost;
     }
 
-    public Point getLocation(){
+//    public Point getLocation(){
+    public Point2D getLocation(){
         return loc;
     }
-    
+    //Method to obtain the neighbors (successors)
+    //of current node
     public Set<State> getNeighbors(){
         int top = (int) loc.getX() - 1;
         int down = (int) loc.getX() + 1;
