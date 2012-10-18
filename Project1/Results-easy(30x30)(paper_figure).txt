@@ -1,0 +1,60 @@
+/* Shopping list on Paper for store_easy.map */
+    toShop.put("hotdogs", new Point2D.Double(1,1));
+    toShop.put("milk", new Point2D.Double(28, 1));
+    toShop.put("ham", new Point2D.Double(1, 28));
+    toShop.put("juice", new Point2D.Double(15, 28));
+    toShop.put("orange", new Point2D.Double(20, 15));
+    toShop.put("CHECKOUT", new Point2D.Double(14, 27));
+    toShop.put("ENTRANCE", new Point2D.Double(28, 28));
+
+CHECKOUT-juice: 2.0
+juice-ham: 14.0
+ham-hotdogs: 27.0
+hotdogs-orange: 33.0
+orange-milk: 22.0
+milk-ENTRANCE: 27.0
+LEAST ORDER COST: 125.0
+SHOPPING ORDER: 
+	A-ENTRANCE
+	B-milk
+	C-orange
+	D-hotdogs
+	E-ham
+	F-juice
+	G-CHECKOUT
+
+SHOPPING MAP: 
+██████████████████████████████
+█D▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒        ▒▒▒B█
+█ ▒█  █  █  █  █▒   █████▒  ▒█
+█ ▒█  █  █  █  █▒        ▒  ▒█
+█ ▒█  █  █  █  █▒        ▒  ▒█
+█ ▒█  █  █  █  █▒   █████▒  ▒█
+█ ▒█  █  █  █  █▒        ▒  ▒█
+█ ▒█  █  █  █  █▒        ▒  ▒█
+█ ▒█  █  █  █  █▒   █████▒  ▒█
+█ ▒█  █  █  █  █▒▒▒▒     ▒  ▒█
+█ ▒                ▒     ▒  ▒█
+█ ▒                ▒▒▒▒▒▒▒ ▒▒█
+█ ▒█  █  █  █  █  █▒▒█     ▒██
+█ ▒█  █  █  █  █  █▒▒█     ▒██
+█ ▒█  █  █  █  █  █▒▒█     ▒██
+█ ▒█  █  █  █  █  █ C█     ▒██
+█ ▒█  █  █  █  █  █  █     ▒ █
+█ ▒█  █  █  █  █  █  █   █ ▒ █
+█ ▒█  █  █  █  █  █  █   █ ▒ █
+█ ▒█  █  █  █  █  █  █   █ ▒ █
+█ ▒█  █  █  █  █  █  █   █ ▒ █
+█ ▒█  █  █  █  █  █  █   █ ▒ █
+█ ▒   █  █  █  █  █  █   █ ▒ █
+██▒   █  █  █  █  █  █   ▒▒▒ █
+██▒                      ▒   █
+██▒                      ▒████
+█ ▒   █  █  █  █   ████  ▒   █
+█ ▒   █  █  █ G█   █████ ▒   █
+█E▒▒▒▒▒▒▒▒▒▒▒▒▒F         ▒▒▒A█
+██████████████████████████████
+
+TOTAL SHOPPING DISTANCE: 133 steps.
+TOTAL ELAPSED TIME: 97 ms.
+
